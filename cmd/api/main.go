@@ -23,8 +23,8 @@ func main() {
 			c.JSON(200, gin.H{"status": "ready"})
 		})
 	}
-	api.POST("/books/add", bookHandler.CreateBookHandler)
-	api.GET("/books/:{isbn}", bookHandler.GetBookByIsbnHandler)
+	api.POST("/books", bookHandler.CreateBookHandler)
+	api.GET("/books/:isbn", bookHandler.GetBookByIsbnHandler)
 
 	router.Run(":3000")
 }

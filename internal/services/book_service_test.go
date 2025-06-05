@@ -19,7 +19,7 @@ var mockBook = models.Book{
 	Pages:       391,
 	Description: "Testing lalalalalala",
 	Publisher:   "baltos lankos",
-	PublishDate: "2023",
+	PublishDate: "2023-01-01",
 	Language:    enums.Lithuanian,
 }
 
@@ -43,7 +43,7 @@ func TestCreateBook(t *testing.T) {
 			mockFunc: func() {
 				mock.ExpectExec("INSERT INTO books \\(isbn, title, author, pages, description, publisher, publish_date, language\\) VALUES \\(\\?, \\?, \\?, \\?, \\?, \\?, \\?, \\?\\)").
 					WithArgs(mockBook.ISBN, mockBook.Title, mockBook.Author, mockBook.Pages, mockBook.Description, mockBook.Publisher, mockBook.PublishDate, mockBook.Language).
-					WillReturnResult(nil)
+					WillReturnResult(sqlmock.NewResult(1, 1))
 			},
 			expected: nil,
 		},
@@ -95,7 +95,7 @@ func TestGetBookByIsbn(t *testing.T) {
 			mockFunc: func() {
 				rows := sqlmock.NewRows([]string{"isbn", "title", "author", "pages", "description", "publisher", "publish_date", "language"}).
 					AddRow(mockBook.ISBN, mockBook.Title, mockBook.Author, mockBook.Pages, mockBook.Description, mockBook.Publisher, mockBook.PublishDate, mockBook.Language)
-				mock.ExpectQuery("SELECT * FROM books WHERE isbn = ?").
+				mock.ExpectQuery("SELECT \\* FROM books WHERE isbn = \\?").
 					WithArgs(mockBook.ISBN).
 					WillReturnRows(rows)
 			},
@@ -106,7 +106,7 @@ func TestGetBookByIsbn(t *testing.T) {
 			name: "Book not found",
 			isbn: "12121212120",
 			mockFunc: func() {
-				mock.ExpectQuery("SELECT * FROM books WHERE isbn = ?").
+				mock.ExpectQuery("SELECT \\* FROM books WHERE isbn = \\?").
 					WithArgs("12121212120").
 					WillReturnError(sql.ErrNoRows)
 			},
