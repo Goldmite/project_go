@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Goldmite/project_go/src/database"
+	"github.com/Goldmite/project_go/cmd/database"
 	"github.com/gin-gonic/gin"
 	_ "github.com/glebarez/go-sqlite"
 )
