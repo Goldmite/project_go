@@ -7,6 +7,11 @@ import (
 	"github.com/Goldmite/project_go/internal/models"
 )
 
+type IBookService interface {
+	CreateBook(newBook models.Book) error
+	GetBookByIsbn(isbn string) (*models.Book, error)
+}
+
 type BookService struct {
 	database *sql.DB
 }
