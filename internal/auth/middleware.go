@@ -35,7 +35,6 @@ func EnsureValidToken() gin.HandlerFunc {
 		if cert == "" {
 			return nil, errors.New("failed to fetch PEM certificate")
 		}
-		// Return the certificate as interface{} instead of []byte
 		return cert, nil
 	}
 
@@ -87,26 +86,4 @@ func EnsureValidToken() gin.HandlerFunc {
 		// Token is valid, continue
 		c.Next()
 	}
-}
-
-// getPemCert fetches the PEM certificate from Auth0 (implementation similar to before)
-func getPemCert(ctx context.Context) string {
-	// Implement your actual certificate fetching logic here
-	// This is a simplified example - in production you should:
-	// 1. Cache the certificate
-	// 2. Handle errors properly
-	// 3. Verify the certificate chain
-
-	domain := os.Getenv("AUTH0_DOMAIN")
-	if domain == "" {
-		return ""
-	}
-
-	// In a real implementation, you would:
-	// 1. Fetch the JWKS from https://{domain}/.well-known/jwks.json
-	// 2. Parse the JWKS to get the correct key
-	// 3. Convert it to PEM format
-
-	// For now, return an empty string (implementation left as exercise)
-	return ""
 }
