@@ -45,3 +45,18 @@ func (bookHandler *BookHandler) GetBookByIsbnHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, book)
 }
+
+func (bookHandler *BookHandler) AddNewBookForUserHandler(c *gin.Context) {
+	//TODO
+}
+
+func (bookHandler *BookHandler) GetAllUserBooksHandler(c *gin.Context) {
+	userId := c.Param("id")
+	userBooks, err := bookHandler.bookService.GetAllUserBooks(userId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, userBooks)
+}

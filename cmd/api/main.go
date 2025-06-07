@@ -30,6 +30,7 @@ func main() {
 	api.POST("/users", userHandler.CreateUserHandler) // Register
 	api.GET("/users/:id", userHandler.GetUserHandler)
 	api.GET("/users", userHandler.GetUserHandler) // Login | by email and password
-
+	// TODO get books for user
+	// TODO add new book for user
 	router.Run(":3000")
 }
