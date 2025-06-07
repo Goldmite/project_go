@@ -15,6 +15,8 @@ func main() {
 
 	bookService := services.NewBookService(db)
 	bookHandler := handlers.NewBookHandler(bookService)
+	userService := services.NewUserService(db)
+	userHandler := handlers.NewUserHandler(userService)
 
 	router := gin.Default()
 	api := router.Group("/api")
@@ -25,6 +27,9 @@ func main() {
 	}
 	api.POST("/books", bookHandler.CreateBookHandler)
 	api.GET("/books/:isbn", bookHandler.GetBookByIsbnHandler)
+	api.POST("/users", userHandler.CreateUserHandler) // Register
+	api.GET("/users/:id", userHandler.GetUserHandler)
+	api.GET("/users", userHandler.GetUserHandler) // Login | by email and password
 
 	router.Run(":3000")
 }

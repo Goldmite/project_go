@@ -29,7 +29,7 @@ func (userService *UserService) CreateUser(r models.CreateUserRequest) (*string,
 	if err != nil {
 		return nil, fmt.Errorf("failed to hash password %w", err)
 	}
-	query := "INSERT INTO users (id, name, email, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)"
+	query := "INSERT INTO users (id, name, email, pw_hash, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)"
 	_, err = userService.database.Exec(query, u.ID, u.Name, u.Email, u.PasswordHash, u.CreatedAt, u.UpdatedAt)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create user %w", err)

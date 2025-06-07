@@ -39,8 +39,8 @@ func (userHandler *UserHandler) GetUserHandler(c *gin.Context) {
 	if id != "" {
 		res, err = userHandler.userService.GetUserById(id)
 	} else {
-		email := c.Param("email")
-		password := c.Param("password")
+		email := c.Query("email")
+		password := c.Query("password")
 		if email == "" || password == "" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid params"})
 		}

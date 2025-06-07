@@ -33,13 +33,13 @@ func NewUserFromRequest(r CreateUserRequest) (*User, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	createdAt := time.Now().String()
 	return &User{
 		ID:           uuid.New().String(),
 		Name:         r.Name,
 		Email:        r.Email,
 		PasswordHash: string(hashed),
-		CreatedAt:    time.Now().String(),
-		UpdatedAt:    time.Now().String(),
+		CreatedAt:    createdAt,
+		UpdatedAt:    createdAt,
 	}, nil
 }
