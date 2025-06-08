@@ -17,6 +17,7 @@ func NewBookHandler(bs *services.BookService) *BookHandler {
 	return &BookHandler{bookService: bs}
 }
 
+/*
 func (bookHandler *BookHandler) CreateBookHandler(c *gin.Context) {
 	isbn := c.Param("isbn")
 	newBook, err := bookHandler.bookService.FetchByIsbnFromApi(isbn)
@@ -32,7 +33,7 @@ func (bookHandler *BookHandler) CreateBookHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, newBook)
-}
+}*/
 
 func (bookHandler *BookHandler) FetchByIsbnFromApiHandler(c *gin.Context) {
 	isbn := c.Param("isbn")
@@ -65,7 +66,7 @@ func (bookHandler *BookHandler) AddNewBookForUserHandler(c *gin.Context) {
 		return
 	}
 
-	err := bookHandler.bookService.AddNewBookForUser(req.UserId, req.Book)
+	err := bookHandler.bookService.AddNewBookForUser(req.UserId, req.Isbn)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

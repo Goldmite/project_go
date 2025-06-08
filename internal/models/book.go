@@ -12,3 +12,11 @@ type Book struct {
 	PublishDate string         `json:"publishedDate"`
 	Language    enums.Language `json:"language"`
 }
+
+type BookItem struct {
+	Book Book `json:"volumeInfo"`
+}
+
+type BooksResponse struct {
+	Items []BookItem `json:"items"`
+}

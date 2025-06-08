@@ -23,6 +23,18 @@ func NewBookService(db *sql.DB) *BookService {
 	return &BookService{database: db}
 }
 
+func (bookService *BookService) CreateBook(b models.Book) error {
+	authorsJSON, err := json.Marshal(b.Authors)
+	if err != nil {
+		return err
+	}
+	query := "INSERT INTO books (isbn, title, authors, pages, description, publisher, publish_date, language) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+	_, err = bookService.database.Exec(query, b.ISBN, b.Title, string(authorsJSON), b.Pages, b.Description, b.Publisher, b.PublishDate, b.Language)
+	if err != nil {
+		return fmt.Errorf("failed to insert book %w", err)
+	}
+	return nil
+}
 func (bookService *BookService) FetchByIsbnFromApi(isbn string) (*models.Book, error) {
 	apiKey := os.Getenv("API_KEY")
 	url := fmt.Sprintf("https://www.googleapis.com/books/v1/volumes?q=isbn:%s&key=%s", isbn, apiKey)
@@ -32,21 +44,14 @@ func (bookService *BookService) FetchByIsbnFromApi(isbn string) (*models.Book, e
 	}
 	defer res.Body.Close()
 
-	var result models.Book
+	var result models.BooksResponse
 	if err := json.NewDecoder(res.Body).Decode(&result); err != nil {
 		return nil, fmt.Errorf("failed to decode response: %w", err)
 	}
-
-	return &result, nil
-}
-
-func (bookService *BookService) CreateBook(b models.Book) error {
-	query := "INSERT INTO books (isbn, title, authors, pages, description, publisher, publish_date, language) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-	_, err := bookService.database.Exec(query, b.ISBN, b.Title, b.Authors, b.Pages, b.Description, b.Publisher, b.PublishDate, b.Language)
-	if err != nil {
-		return fmt.Errorf("failed to insert book %w", err)
+	if len(result.Items) == 0 {
+		return nil, nil
 	}
-	return nil
+	return &result.Items[0].Book, nil
 }
 
 func (bookService *BookService) GetBookByIsbn(isbn string) (*models.Book, error) {
@@ -65,16 +70,22 @@ func (bookService *BookService) GetBookByIsbn(isbn string) (*models.Book, error)
 	return &book, nil
 }
 
-func (bookService *BookService) AddNewBookForUser(userId string, b models.Book) error {
+func (bookService *BookService) AddNewBookForUser(userId, isbn string) error {
 	// Book does not exist -> add it
-	if err := bookService.CreateBook(b); err != nil {
-		if _, err := bookService.GetBookByIsbn(b.ISBN); err != nil {
+	if _, err := bookService.GetBookByIsbn(isbn); err != nil {
+		newBook, err := bookService.FetchByIsbnFromApi(isbn)
+		if err != nil {
+			return err
+		}
+		newBook.ISBN = isbn
+
+		if err := bookService.CreateBook(*newBook); err != nil {
 			return err
 		}
 	}
 
 	query := "INSERT INTO views (user_id, book_id) VALUES (?, ?)"
-	_, err := bookService.database.Exec(query, userId, b.ISBN)
+	_, err := bookService.database.Exec(query, userId, isbn)
 	if err != nil {
 		return fmt.Errorf("failed to insert view %w", err)
 	}
