@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/Goldmite/project_go/internal/models"
+	"github.com/Goldmite/project_go/internal/models/dto"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -38,10 +39,10 @@ func (userService *UserService) CreateUser(r models.CreateUserRequest) (*string,
 	return &u.ID, nil
 }
 
-func (userService *UserService) GetUserById(id string) (*models.GetUserResponse, error) {
+func (userService *UserService) GetUserById(id string) (*dto.GetUserResponse, error) {
 	query := "SELECT id, name, email FROM users WHERE id = ?"
 
-	var res models.GetUserResponse
+	var res dto.GetUserResponse
 	err := userService.database.QueryRow(query, id).Scan(&res.ID, &res.Name, &res.Email)
 	if err != nil {
 		return nil, fmt.Errorf("user not found %w", err)
@@ -50,10 +51,10 @@ func (userService *UserService) GetUserById(id string) (*models.GetUserResponse,
 	return &res, nil
 }
 
-func (userService *UserService) GetUserByLogin(email, password string) (*models.GetUserResponse, error) {
+func (userService *UserService) GetUserByLogin(email, password string) (*dto.GetUserResponse, error) {
 	query := "SELECT id, name, email, pw_hash FROM users WHERE email = ?"
 
-	var res models.GetUserResponse
+	var res dto.GetUserResponse
 	var hashed string
 	err := userService.database.QueryRow(query, email).Scan(&res.ID, &res.Name, &res.Email, &hashed)
 	if err != nil {

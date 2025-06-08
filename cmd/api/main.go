@@ -25,11 +25,13 @@ func main() {
 			c.JSON(200, gin.H{"status": "ready"})
 		})
 	}
-	api.POST("/books", bookHandler.CreateBookHandler)
+	//api.POST("/books", bookHandler.CreateBookHandler)
 	api.GET("/books/:isbn", bookHandler.GetBookByIsbnHandler)
 	api.POST("/users", userHandler.CreateUserHandler) // Register
 	api.GET("/users/:id", userHandler.GetUserHandler)
 	api.GET("/users", userHandler.GetUserHandler) // Login | by email and password
+	api.GET("/books/view/:id", bookHandler.GetAllUserBooksHandler)
+	api.POST("/books", bookHandler.AddNewBookForUserHandler)
 
 	router.Run(":3000")
 }
