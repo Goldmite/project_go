@@ -2,7 +2,9 @@ package services
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
+	"net/http"
 
 	"github.com/Goldmite/project_go/internal/models"
 )
@@ -18,6 +20,22 @@ type BookService struct {
 
 func NewBookService(db *sql.DB) *BookService {
 	return &BookService{database: db}
+}
+
+func (bookService *BookService) FetchByIsbnFromApi(isbn, apiKey string) (*models.Book, error) {
+	url := fmt.Sprintf("https://www.googleapis.com/books/v1/volumes?q=isbn:%s&key=%s", isbn, apiKey)
+	res, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	var result models.Book
+	if err := json.NewDecoder(res.Body).Decode(&result); err != nil {
+		return nil, fmt.Errorf("failed to decode response: %w", err)
+	}
+
+	return &result, nil
 }
 
 func (bookService *BookService) CreateBook(b models.Book) error {

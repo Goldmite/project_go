@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/Goldmite/project_go/internal/models"
 	"github.com/Goldmite/project_go/internal/models/dto"
@@ -32,6 +33,18 @@ func (bookHandler *BookHandler) CreateBookHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, newBook)
+}
+
+func (bookHandler *BookHandler) FetchByIsbnFromApiHandler(c *gin.Context) {
+	apiKey := os.Getenv("API_KEY")
+	isbn := c.Param("isbn")
+	book, err := bookHandler.bookService.FetchByIsbnFromApi(isbn, apiKey)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, book)
 }
 
 func (bookHandler *BookHandler) GetBookByIsbnHandler(c *gin.Context) {

@@ -26,7 +26,7 @@ func main() {
 		})
 	}
 	//api.POST("/books", bookHandler.CreateBookHandler)
-	api.GET("/books/:isbn", bookHandler.GetBookByIsbnHandler)
+	api.GET("/books/:isbn", bookHandler.FetchByIsbnFromApiHandler)
 	api.POST("/users", userHandler.CreateUserHandler) // Register
 	api.GET("/users/:id", userHandler.GetUserHandler)
 	api.GET("/users", userHandler.GetUserHandler) // Login | by email and password

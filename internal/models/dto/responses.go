@@ -5,3 +5,8 @@ type GetUserResponse struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }
+
+type FetchBookResponse struct {
+	Title   string   `json:"title"`
+	Authors []string `json:"authors"`
+}
