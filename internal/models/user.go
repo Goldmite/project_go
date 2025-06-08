@@ -22,12 +22,6 @@ type CreateUserRequest struct {
 	Password string `json:"password"`
 }
 
-type GetUserResponse struct {
-	ID    string `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
-}
-
 func NewUserFromRequest(r CreateUserRequest) (*User, error) {
 	hashed, err := bcrypt.GenerateFromPassword([]byte(r.Password), bcrypt.DefaultCost)
 	if err != nil {

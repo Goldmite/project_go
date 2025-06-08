@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/Goldmite/project_go/internal/models"
+	"github.com/Goldmite/project_go/internal/models/dto"
 	"github.com/Goldmite/project_go/internal/services"
 	"github.com/gin-gonic/gin"
 )
@@ -33,7 +34,7 @@ func (userHandler *UserHandler) CreateUserHandler(c *gin.Context) {
 }
 
 func (userHandler *UserHandler) GetUserHandler(c *gin.Context) {
-	var res *models.GetUserResponse
+	var res *dto.GetUserResponse
 	var err error
 	id := c.Param("id")
 	if id != "" {
