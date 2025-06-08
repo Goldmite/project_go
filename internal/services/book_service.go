@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/Goldmite/project_go/internal/models"
 )
@@ -22,7 +23,8 @@ func NewBookService(db *sql.DB) *BookService {
 	return &BookService{database: db}
 }
 
-func (bookService *BookService) FetchByIsbnFromApi(isbn, apiKey string) (*models.Book, error) {
+func (bookService *BookService) FetchByIsbnFromApi(isbn string) (*models.Book, error) {
+	apiKey := os.Getenv("API_KEY")
 	url := fmt.Sprintf("https://www.googleapis.com/books/v1/volumes?q=isbn:%s&key=%s", isbn, apiKey)
 	res, err := http.Get(url)
 	if err != nil {
@@ -39,8 +41,8 @@ func (bookService *BookService) FetchByIsbnFromApi(isbn, apiKey string) (*models
 }
 
 func (bookService *BookService) CreateBook(b models.Book) error {
-	query := "INSERT INTO books (isbn, title, author, pages, description, publisher, publish_date, language) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-	_, err := bookService.database.Exec(query, b.ISBN, b.Title, b.Author, b.Pages, b.Description, b.Publisher, b.PublishDate, b.Language)
+	query := "INSERT INTO books (isbn, title, authors, pages, description, publisher, publish_date, language) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+	_, err := bookService.database.Exec(query, b.ISBN, b.Title, b.Authors, b.Pages, b.Description, b.Publisher, b.PublishDate, b.Language)
 	if err != nil {
 		return fmt.Errorf("failed to insert book %w", err)
 	}
@@ -52,7 +54,7 @@ func (bookService *BookService) GetBookByIsbn(isbn string) (*models.Book, error)
 	row := bookService.database.QueryRow(query, isbn)
 
 	var book models.Book
-	err := row.Scan(&book.ISBN, &book.Title, &book.Author, &book.Pages, &book.Description, &book.Publisher, &book.PublishDate, &book.Language)
+	err := row.Scan(&book.ISBN, &book.Title, &book.Authors, &book.Pages, &book.Description, &book.Publisher, &book.PublishDate, &book.Language)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, fmt.Errorf("book with ISBN %s not found", isbn)
@@ -81,7 +83,7 @@ func (bookService *BookService) AddNewBookForUser(userId string, b models.Book) 
 }
 
 func (bookService *BookService) GetAllUserBooks(userId string) ([]models.Book, error) {
-	query := "SELECT isbn, title, author, pages, description, publisher, publish_date, language FROM books JOIN views ON isbn = book_id WHERE user_id = ?"
+	query := "SELECT isbn, title, authors, pages, description, publisher, publish_date, language FROM books JOIN views ON isbn = book_id WHERE user_id = ?"
 	rows, err := bookService.database.Query(query, userId)
 	if err != nil {
 		return nil, err
@@ -91,7 +93,7 @@ func (bookService *BookService) GetAllUserBooks(userId string) ([]models.Book, e
 	var userBooks []models.Book
 	for rows.Next() {
 		var b models.Book
-		err := rows.Scan(&b.ISBN, &b.Title, &b.Author, &b.Pages, &b.Description, &b.Publisher, &b.PublishDate, &b.Language)
+		err := rows.Scan(&b.ISBN, &b.Title, &b.Authors, &b.Pages, &b.Description, &b.Publisher, &b.PublishDate, &b.Language)
 		if err != nil {
 			return nil, err
 		}
