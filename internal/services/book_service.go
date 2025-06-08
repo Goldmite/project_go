@@ -2,7 +2,10 @@ package services
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
+	"net/http"
+	"os"
 
 	"github.com/Goldmite/project_go/internal/models"
 )
@@ -21,12 +24,34 @@ func NewBookService(db *sql.DB) *BookService {
 }
 
 func (bookService *BookService) CreateBook(b models.Book) error {
-	query := "INSERT INTO books (isbn, title, author, pages, description, publisher, publish_date, language) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-	_, err := bookService.database.Exec(query, b.ISBN, b.Title, b.Author, b.Pages, b.Description, b.Publisher, b.PublishDate, b.Language)
+	authorsJSON, err := json.Marshal(b.Authors)
+	if err != nil {
+		return err
+	}
+	query := "INSERT INTO books (isbn, title, authors, pages, description, publisher, publish_date, language) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+	_, err = bookService.database.Exec(query, b.ISBN, b.Title, string(authorsJSON), b.Pages, b.Description, b.Publisher, b.PublishDate, b.Language)
 	if err != nil {
 		return fmt.Errorf("failed to insert book %w", err)
 	}
 	return nil
+}
+func (bookService *BookService) FetchByIsbnFromApi(isbn string) (*models.Book, error) {
+	apiKey := os.Getenv("API_KEY")
+	url := fmt.Sprintf("https://www.googleapis.com/books/v1/volumes?q=isbn:%s&key=%s", isbn, apiKey)
+	res, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	var result models.BooksResponse
+	if err := json.NewDecoder(res.Body).Decode(&result); err != nil {
+		return nil, fmt.Errorf("failed to decode response: %w", err)
+	}
+	if len(result.Items) == 0 {
+		return nil, nil
+	}
+	return &result.Items[0].Book, nil
 }
 
 func (bookService *BookService) GetBookByIsbn(isbn string) (*models.Book, error) {
@@ -34,27 +59,34 @@ func (bookService *BookService) GetBookByIsbn(isbn string) (*models.Book, error)
 	row := bookService.database.QueryRow(query, isbn)
 
 	var book models.Book
-	err := row.Scan(&book.ISBN, &book.Title, &book.Author, &book.Pages, &book.Description, &book.Publisher, &book.PublishDate, &book.Language)
+	var authorsJson string
+	err := row.Scan(&book.ISBN, &book.Title, &authorsJson, &book.Pages, &book.Description, &book.Publisher, &book.PublishDate, &book.Language)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("book with ISBN %s not found", isbn)
-		}
-		return nil, fmt.Errorf("failed to scan book: %w", err)
+		return nil, err
 	}
-
+	err = json.Unmarshal([]byte(authorsJson), &book.Authors)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse authors JSON: %w", err)
+	}
 	return &book, nil
 }
 
-func (bookService *BookService) AddNewBookForUser(userId string, b models.Book) error {
+func (bookService *BookService) AddNewBookForUser(userId, isbn string) error {
 	// Book does not exist -> add it
-	if err := bookService.CreateBook(b); err != nil {
-		if _, err := bookService.GetBookByIsbn(b.ISBN); err != nil {
+	if _, err := bookService.GetBookByIsbn(isbn); err != nil {
+		newBook, err := bookService.FetchByIsbnFromApi(isbn)
+		if err != nil {
+			return err
+		}
+		newBook.ISBN = isbn
+
+		if err := bookService.CreateBook(*newBook); err != nil {
 			return err
 		}
 	}
 
 	query := "INSERT INTO views (user_id, book_id) VALUES (?, ?)"
-	_, err := bookService.database.Exec(query, userId, b.ISBN)
+	_, err := bookService.database.Exec(query, userId, isbn)
 	if err != nil {
 		return fmt.Errorf("failed to insert view %w", err)
 	}
@@ -63,7 +95,7 @@ func (bookService *BookService) AddNewBookForUser(userId string, b models.Book) 
 }
 
 func (bookService *BookService) GetAllUserBooks(userId string) ([]models.Book, error) {
-	query := "SELECT isbn, title, author, pages, description, publisher, publish_date, language FROM books JOIN views ON isbn = book_id WHERE user_id = ?"
+	query := "SELECT isbn, title, authors, pages, description, publisher, publish_date, language FROM books JOIN views ON isbn = book_id WHERE user_id = ?"
 	rows, err := bookService.database.Query(query, userId)
 	if err != nil {
 		return nil, err
@@ -73,7 +105,7 @@ func (bookService *BookService) GetAllUserBooks(userId string) ([]models.Book, e
 	var userBooks []models.Book
 	for rows.Next() {
 		var b models.Book
-		err := rows.Scan(&b.ISBN, &b.Title, &b.Author, &b.Pages, &b.Description, &b.Publisher, &b.PublishDate, &b.Language)
+		err := rows.Scan(&b.ISBN, &b.Title, &b.Authors, &b.Pages, &b.Description, &b.Publisher, &b.PublishDate, &b.Language)
 		if err != nil {
 			return nil, err
 		}
