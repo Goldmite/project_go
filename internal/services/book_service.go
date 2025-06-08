@@ -59,14 +59,15 @@ func (bookService *BookService) GetBookByIsbn(isbn string) (*models.Book, error)
 	row := bookService.database.QueryRow(query, isbn)
 
 	var book models.Book
-	err := row.Scan(&book.ISBN, &book.Title, &book.Authors, &book.Pages, &book.Description, &book.Publisher, &book.PublishDate, &book.Language)
+	var authorsJson string
+	err := row.Scan(&book.ISBN, &book.Title, &authorsJson, &book.Pages, &book.Description, &book.Publisher, &book.PublishDate, &book.Language)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("book with ISBN %s not found", isbn)
-		}
-		return nil, fmt.Errorf("failed to scan book: %w", err)
+		return nil, err
 	}
-
+	err = json.Unmarshal([]byte(authorsJson), &book.Authors)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse authors JSON: %w", err)
+	}
 	return &book, nil
 }
 

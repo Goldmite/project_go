@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/Goldmite/project_go/internal/models/dto"
 	"github.com/Goldmite/project_go/internal/services"
@@ -68,6 +69,10 @@ func (bookHandler *BookHandler) AddNewBookForUserHandler(c *gin.Context) {
 
 	err := bookHandler.bookService.AddNewBookForUser(req.UserId, req.Isbn)
 	if err != nil {
+		if strings.Contains(err.Error(), "UNIQUE constraint failed") {
+			c.JSON(http.StatusConflict, gin.H{"error": "Duplicate user book"})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
