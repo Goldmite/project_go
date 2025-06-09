@@ -1,20 +1,20 @@
 <script>
-	import DarkToggle from "../components/DarkToggle.svelte";
 	import NavButton from "../components/NavButton.svelte";
 
 </script>
-<nav class="flex p-4 items-center justify-between">
-    <img class="h-16 w-auto" src="./SHELF_LOGO.svg" alt="Shelf" >
-    <DarkToggle> </DarkToggle>
-</nav>
 
 <div class="flex flex-col font-serif text-center text-balance items-center justify-center h-[60svh]">
-    <h1 class="text-9xl p-10" >welcome to <br> your digital <inline class="text-logo-red italic">shelf</inline></h1>
-    <p class="font-sans text-lg">Digitalize your bookshelf, track progress, make a group - share your shelves.</p>
-    <div class="flex p-10">
-        <NavButton link="/login" buttonText="Log In" color="red"></NavButton>
-
-        <NavButton link="/register" buttonText="Sign Up" color="blue"></NavButton>
+    <h1 class="text-9xl p-10" >welcome to <br> <inline class="text-logo-blue font-bold">your</inline> digital <inline class="text-logo-red italic">shelf</inline></h1>
+    <div class="flex flex-col p-10">
+        <p class="font-sans text-lg">Digitalize your bookshelf, track progress, make a group - share your shelves.</p>
+        <div class="flex justify-around items-center bg-light rounded-4xl inset-shadow-md mt-4">
+            <NavButton link="/register" buttonText="Sign Up" color="logo-blue"></NavButton>
+            <a class="w-6 h-6" href="https://github.com/Goldmite/project_go" target="_blank" aria-label="Visit Goldmite's Shelf project on GitHub"><svg role="img" aria-hidden="true" focusable="false" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <title>GitHub</title>
+                <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+            </svg></a>
+            <NavButton link="/login" buttonText="Log In" color="logo-red"></NavButton>
+        </div>
     </div>
 </div>
 

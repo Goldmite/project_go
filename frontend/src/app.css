@@ -8,6 +8,7 @@
     --color-dark: oklch(27.4% 0.006 286.033);
     --color-logo-red: #ff7e7e;
     --color-logo-blue: #7e80ff;
+    --inset-shadow-md: inset -1px 1px 8px rgba(0, 0, 0, 0.25);
 }
 
 @layer {

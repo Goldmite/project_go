@@ -2,5 +2,6 @@
     let {link, buttonText, color} = $props();
 </script>
 <a href="{link}">
-    <button class="text-logo-{color} font-sans bg-dark dark:bg-light p-2 font-bold rounded-xl m-4"> {buttonText} </button>
+    <!-- Safelist: text-logo-blue shadow-logo-red shadow-logo-blue -->
+    <button class="text-{color} bg-neutral font-sans font-bold rounded-xl shadow-md hover:shadow-lg shadow-{color} p-3 m-2 "> {buttonText} </button>
 </a>
