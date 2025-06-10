@@ -24,7 +24,7 @@
 	type="button"
 	aria-label="Toggle dark mode"
 	class="rounded-full p-2 text-2xl"
-	on:click={toggleTheme}
+	onclick={toggleTheme}
 >
 	{#if dark}
 		<span class="icon-[solar--sun-2-bold]"></span>
