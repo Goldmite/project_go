@@ -1,12 +1,13 @@
 <script lang="ts">
     let { children, shadowColorClass, isActive, handleClick } = $props();
-
     
 </script>
-<!-- Safelist: login signup -->
-<button class=" card {shadowColorClass} w-1/4 h-1/2 p-10 m-8" class:active={isActive} onclick={handleClick} disabled={isActive}>
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<!-- Safelist: login signup-->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<div class="card {shadowColorClass} text-dark h-[500px] sm:w-1/4 w-full p-10 m-8 {!isActive && "dots backdrop-brightness-95 brightness-95"}" class:alternate={shadowColorClass=='signup'} class:active={isActive} onclick={!isActive && handleClick}>
     {@render children()}
-</button>
+</div>
 
 <style>
     @layer components {
@@ -19,14 +20,27 @@
             --tw-inset-shadow-color: var(--color-logo-blue);
         }
         .card {
-            border-radius: var(--radius-xl);
-            --tw-shadow: inset 0 0 20px var(--tw-shadow-color);
+            border-radius: var(--radius-2xl);
+            border-width: 1px;
+            --tw-shadow: inset 2px 10px 6px var(--tw-inset-shadow-color);
             box-shadow: var(--tw-shadow);
+            
         }
 
-        .active {
-            --tw-shadow: 0 0 20px var(--tw-inset-shadow-color);
+        .card.active {
+            --tw-shadow: 2px 8px 8px var(--tw-shadow-color);
+            background-color: var(--color-light);
+        }
+
+        .dots {
+            background-image: radial-gradient(
+            var(--color-logo-red) 0px,
+            transparent 2px
+            );
+            background-size: 20px 20px;
+        }
+        .dots.alternate {
+            --color-logo-red: var(--color-logo-blue)
         }
     }
-
 </style>
