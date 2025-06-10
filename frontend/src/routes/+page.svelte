@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import NavButton from '../components/NavButton.svelte';
 </script>
 
@@ -14,7 +14,7 @@
 			Digitalize your bookshelf, track progress, make a group - share your shelves.
 		</p>
 		<div class="bg-light inset-shadow-md mt-4 flex items-center justify-around rounded-4xl">
-			<NavButton link="/register" buttonText="Sign Up" color="logo-blue"></NavButton>
+			<NavButton link="/signup" buttonText="Sign Up" color="logo-blue"></NavButton>
 			<a
 				class="h-6 w-6"
 				href="https://github.com/Goldmite/project_go"

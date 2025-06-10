@@ -1,7 +1,8 @@
 <script lang="ts">
+	import { page } from "$app/state";
 	import LoginCard from "../../components/LoginCard.svelte";
 
-    let isLoginSelected = $state(true);
+    let isLoginSelected = page.state;
     function toggleActive() {
         isLoginSelected = !isLoginSelected;
     }
