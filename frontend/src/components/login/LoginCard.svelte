@@ -10,7 +10,7 @@
 		'dots brightness-95 backdrop-brightness-95'}"
 	class:alternate={shadowColorClass == 'signup'}
 	class:active={isActive}
-	onclick={!isActive && handleClick}
+	onclick={isActive ? undefined : handleClick}
 >
 	{@render children()}
 </div>
