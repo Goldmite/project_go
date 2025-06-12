@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/Goldmite/project_go/internal/models"
 	"github.com/Goldmite/project_go/internal/models/dto"
@@ -19,11 +20,13 @@ func NewUserHandler(us *services.UserService) *UserHandler {
 
 func (userHandler *UserHandler) CreateUserHandler(c *gin.Context) {
 	var request models.CreateUserRequest
-	if err := c.ShouldBindJSON(&request); err != nil {
+	if err := c.ShouldBind(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
+	if request.Name == "" {
+		request.Name = strings.Split(request.Email, "@")[0]
+	}
 	id, err := userHandler.userService.CreateUser(request)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -40,8 +43,8 @@ func (userHandler *UserHandler) GetUserHandler(c *gin.Context) {
 	if id != "" {
 		res, err = userHandler.userService.GetUserById(id)
 	} else {
-		email := c.Query("email")
-		password := c.Query("password")
+		email := c.PostForm("email")
+		password := c.PostForm("password")
 		if email == "" || password == "" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid params"})
 		}
