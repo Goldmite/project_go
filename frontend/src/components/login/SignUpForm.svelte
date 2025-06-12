@@ -1,12 +1,13 @@
 <script lang="ts">
 	import LoginCard from './LoginCard.svelte';
+	import { enhance } from '$app/forms';
 
 	let { isSignUpSelected, toggleActive, emailField, passwordField, usernameField } = $props();
 </script>
 
 <LoginCard shadowColorClass="signup" isActive={isSignUpSelected} handleClick={toggleActive}>
 	{#if isSignUpSelected}
-		<form class="flex h-full flex-col space-y-6">
+		<form method="POST" use:enhance action="?/signup" class="flex h-full flex-col space-y-6">
 			{@render usernameField()}
 			{@render emailField()}
 			{@render passwordField()}
