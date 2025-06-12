@@ -17,9 +17,9 @@ type User struct {
 }
 
 type CreateUserRequest struct {
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Name     string `form:"name"`
+	Email    string `form:"email" binding:"required,email"`
+	Password string `form:"password" binding:"required"`
 }
 
 func NewUserFromRequest(r CreateUserRequest) (*User, error) {
