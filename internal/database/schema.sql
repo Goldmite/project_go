@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS books (
 	description TEXT,
     publisher TEXT,
     publish_date TEXT,
-    language TEXT NOT NULL
+    language TEXT NOT NULL,
+    cover_url TEXT 
 );
 
 CREATE TABLE IF NOT EXISTS views (

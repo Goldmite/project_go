@@ -11,12 +11,24 @@ type Book struct {
 	Publisher   string         `json:"publisher"`
 	PublishDate string         `json:"publishedDate"`
 	Language    enums.Language `json:"language"`
+	Cover       Image          `json:"imageLinks"`
+}
+
+type Image struct {
+	Url string `json:"thumbnail"`
 }
 
 type BookItem struct {
 	Book Book `json:"volumeInfo"`
 }
 
-type BooksResponse struct {
+type BookQueryResponse struct {
 	Items []BookItem `json:"items"`
+}
+
+type BookResponse struct {
+	ISBN    string   `json:"isbn"`
+	Title   string   `json:"title"`
+	Authors []string `json:"authors"`
+	Cover   Image    `json:"cover"`
 }
