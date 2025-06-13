@@ -1,21 +1,32 @@
 <script lang="ts">
+	import AddBookModal from "./Modal.svelte";
 	import BookCard from "./BookCard.svelte";
+	import Modal from "./Modal.svelte";
     let { books } = $props();
-    /*const isbn = "1234567890123"
-    const title = "Test title is quite long and will wrap nicely";
-    const authors = ["First Author name", "Second Author longer name", "Third author name not fit"];
-    const cover = "";//"http://books.google.com/books/content?id=SzF8AwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api";
-    const b = {isbn, title ,authors, cover}
-    const books = [
-        b, b, b, b, b, b, b, b
-    ]*/
+    
+    let showModal = $state(false);
 </script>
 
 <div class="grid grid-cols-7">
+    <button onclick={() => (showModal = true)} class="addNewBook p-4 border hover:border-2 rounded-md bg-logo-blue/20 text-8xl font-extralight hover:font-light">
+        +
+    </button>
     {#each books as book }
         <BookCard title={book.title} authors={book.authors} cover={book.cover}>
         </BookCard>
-    {:else}
-        <p>You have no books on your shelf.</p>
     {/each}
 </div>
+<AddBookModal bind:showModal>
+    {#snippet header()}
+        <h2>Add new book</h2>
+    {/snippet}
+    <input>
+</AddBookModal>
+<style>
+    .addNewBook {
+        width: 14rem;
+        height: 20rem;
+        color: var(--color-logo-blue);
+        border-color: var(--color-logo-blue);
+    }
+</style>
