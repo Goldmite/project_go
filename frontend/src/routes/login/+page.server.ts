@@ -1,5 +1,5 @@
 import { fail, type Actions } from '@sveltejs/kit';
-import VITE_BASE_API_URL from '$env/static/public'
+import { user } from '$lib/stores/user';
 
 export const actions = {
 	login: async (event) => {
@@ -11,8 +11,11 @@ export const actions = {
 		});
 
 		if (res.status != 200) {
-			return fail(res.status, { res });
+			return fail(res.status);
 		}
+
+		const userJson = await res.json();
+		user.set(userJson);
 
 		return { success: true };
 	},
@@ -25,7 +28,7 @@ export const actions = {
 		});
 
 		if (res.status != 201) {
-			return fail(res.status, { res });
+			return fail(res.status);
 		}
 
 		return { success: true };
