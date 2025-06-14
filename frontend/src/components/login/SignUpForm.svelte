@@ -12,7 +12,7 @@
 			{@render emailField()}
 			{@render passwordField()}
 			<button
-				class="bg-logo-blue mt-auto w-full rounded-2xl p-2 transition delay-100 duration-300 ease-in-out hover:scale-110 focus:outline-1"
+				class="bg-logo-blue mt-auto w-full rounded-2xl p-2 transition delay-50 duration-200 ease-in-out hover:scale-110 focus:outline-1"
 			>
 				Sign up
 			</button>

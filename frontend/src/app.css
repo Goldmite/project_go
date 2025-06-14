@@ -14,13 +14,10 @@
 }
 
 @layer {
-	.typography {
-		h1 {
-			font-size: var(--text-2xl--line-height);
-			font-weight: var(--font-weight-semibold);
-		}
-		p {
-			font-size: var(--text-base);
-		}
+	input {
+		border: 1px solid var(--color-neutral-500);
+		border-radius: var(--radius-xl);
+		padding: var(--spacing);
+		width: 100%;
 	}
 }

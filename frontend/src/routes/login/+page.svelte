@@ -38,7 +38,7 @@
 {#snippet nameField()}
 	<div>
 		<label for="name" class="block p-2">Username </label>
-		<input class="outline-status-logo-done focus:outline-3" name="name" type="text" />
+		<input class="outline-status-logo-done focus:outline-3" name="name" type="text" maxlength="32" />
 	</div>
 {/snippet}
 
@@ -50,6 +50,7 @@
 			bind:value={email}
 			name="email"
 			type="email"
+			maxlength="256"
 			required
 		/>
 	</div>
@@ -64,6 +65,7 @@
 				bind:value={password}
 				name="password"
 				type="password"
+				maxlength="128"
 				required
 				bind:this={inputStrength}
 			/>
@@ -95,12 +97,6 @@
 </div>
 
 <style>
-	input {
-		border: 1px solid var(--color-neutral-500);
-		border-radius: var(--radius-xl);
-		padding: var(--spacing);
-		width: 100%;
-	}
 	progress {
 		width: 100%;
 		border-radius: var(--radius-xl);

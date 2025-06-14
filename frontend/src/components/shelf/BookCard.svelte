@@ -3,14 +3,14 @@
 
 </script>
 
-<div class="card p-4">
+<div class="card">
     <div class="imageContainer">
         <img class="h-full object-cover border rounded-md" src={cover} alt={title}>
     </div>
     <p class="font-semibold">{title}</p>
     <p class="text-sm font-light italic line-clamp-2">
         {#each authors as author, i}
-            {author}{i != author.length ? ', ' : ''}
+            {author}{i + 1 < authors.length ? ', ' : ''}
         {/each}
     </p>
 </div>

@@ -30,5 +30,5 @@ type BookResponse struct {
 	ISBN    string   `json:"isbn"`
 	Title   string   `json:"title"`
 	Authors []string `json:"authors"`
-	Cover   Image    `json:"cover"`
+	Cover   string   `json:"cover"`
 }
