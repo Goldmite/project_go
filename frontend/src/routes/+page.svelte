@@ -10,7 +10,7 @@
 		<inline class="text-logo-red italic">shelf</inline>
 	</h1>
 	<div class="flex flex-col p-10">
-		<p class="font-sans text-md sm:text-lg md:text-xl">
+		<p class="text-md font-sans sm:text-lg md:text-xl">
 			Digitalize your bookshelf, track progress, make a group - share your shelves.
 		</p>
 		<div class="bg-light inset-shadow-md mt-4 flex items-center justify-around rounded-4xl">

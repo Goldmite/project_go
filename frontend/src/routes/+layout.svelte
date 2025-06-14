@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../app.css';
-	import logo from '$lib/assets/SHELF_LOGO_2.svg'
+	import logo from '$lib/assets/SHELF_LOGO_2.svg';
 	import DarkToggle from '../components/DarkToggle.svelte';
 
 	let { children } = $props();

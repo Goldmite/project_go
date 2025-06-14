@@ -5,7 +5,7 @@
 	import { Tween } from 'svelte/motion';
 	import { zxcvbn } from '@zxcvbn-ts/core';
 	import { cubicOut } from 'svelte/easing';
-	
+
 	let isLoginSelected = $derived(page.state);
 	function toggleActive() {
 		isLoginSelected = !isLoginSelected;
@@ -38,7 +38,12 @@
 {#snippet nameField()}
 	<div>
 		<label for="name" class="block p-2">Username </label>
-		<input class="outline-status-logo-done focus:outline-3" name="name" type="text" maxlength="32" />
+		<input
+			class="outline-status-logo-done focus:outline-3"
+			name="name"
+			type="text"
+			maxlength="32"
+		/>
 	</div>
 {/snippet}
 

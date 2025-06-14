@@ -4,7 +4,7 @@ import { user } from '$lib/stores/user';
 export const actions = {
 	login: async (event) => {
 		const data = await event.request.formData();
-		
+
 		const res = await fetch('http://localhost:3000/api/users/login', {
 			method: 'POST',
 			body: data
@@ -21,10 +21,10 @@ export const actions = {
 	},
 	signup: async (event) => {
 		const data = await event.request.formData();
-		
+
 		const res = await fetch('http://localhost:3000/api/users/signup', {
 			method: 'POST',
-			body: data,
+			body: data
 		});
 
 		if (res.status != 201) {
