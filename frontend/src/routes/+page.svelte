@@ -5,12 +5,12 @@
 <div
 	class="flex h-[60svh] flex-col items-center justify-center text-center font-serif text-balance"
 >
-	<h1 class="p-10 text-9xl">
+	<h1 class="p-10 text-7xl md:text-8xl lg:text-9xl">
 		welcome to <br /> <inline class="text-logo-blue font-bold">your</inline> digital
 		<inline class="text-logo-red italic">shelf</inline>
 	</h1>
 	<div class="flex flex-col p-10">
-		<p class="font-sans text-lg">
+		<p class="text-md font-sans sm:text-lg md:text-xl">
 			Digitalize your bookshelf, track progress, make a group - share your shelves.
 		</p>
 		<div class="bg-light inset-shadow-md mt-4 flex items-center justify-around rounded-4xl">

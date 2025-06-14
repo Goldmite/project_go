@@ -70,8 +70,11 @@ func (bookHandler *BookHandler) AddNewBookForUserHandler(c *gin.Context) {
 	err := bookHandler.bookService.AddNewBookForUser(req.UserId, req.Isbn)
 	if err != nil {
 		if strings.Contains(err.Error(), "UNIQUE constraint failed") {
-			c.JSON(http.StatusConflict, gin.H{"error": "Duplicate user book"})
+			c.JSON(http.StatusConflict, gin.H{"error": "Duplicate user book: " + err.Error()})
 			return
+		}
+		if strings.Contains(err.Error(), "not found") {
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
