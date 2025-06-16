@@ -2,4 +2,6 @@
 	let { children } = $props();
 </script>
 
-{@render children()}
+<div class="m-2 sm:m-10">
+	{@render children()}
+</div>
