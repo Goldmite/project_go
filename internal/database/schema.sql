@@ -37,6 +37,20 @@ CREATE TABLE IF NOT EXISTS member {
     user_id TEXT,
     group_id TEXT,
     PRIMARY KEY (user_id, group_id),
-    joined_at TEXT NOT NULL,    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    joined_at TEXT NOT NULL,   
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE
 }
+
+CREATE TABLE IF NOT EXISTS invitations (
+    token TEXT PRIMARY KEY,
+    email_to TEXT NOT NULL,
+    group_id TEXT NOT NULL,
+    invited_by TEXT NOT NULL,
+    status TEXT DEFAULT 'pending',
+    sent_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    FOREIGN KEY (email_to) REFERENCES users(email) ON DELETE CASCADE,
+    FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE,
+    FOREIGN KEY (invited_by) REFERENCES users(id) ON DELETE CASCADE
+);
