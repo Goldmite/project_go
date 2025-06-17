@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS groups {
     created_at TEXT NOT NULL
 };
 
-CREATE TABLE IF NOT EXISTS member {
+CREATE TABLE IF NOT EXISTS members {
     user_id TEXT,
     group_id TEXT,
     PRIMARY KEY (user_id, group_id),

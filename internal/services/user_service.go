@@ -3,6 +3,7 @@ package services
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	"github.com/Goldmite/project_go/internal/models"
 	"github.com/Goldmite/project_go/internal/models/dto"
@@ -66,4 +67,60 @@ func (userService *UserService) GetUserByLogin(email, password string) (*dto.Get
 	}
 
 	return &res, nil
+}
+
+func (userService *UserService) GetUserInvites(userId string) ([]dto.InviteResponse, error) {
+	query :=
+		"SELECT i.token, i.group_id, g.name, i.invited_by" +
+			"FROM invitations i" +
+			"JOIN users u ON u.email = i.email_to" +
+			"JOIN groups g ON g.id = i.group_id" +
+			"WHERE u.id = ?"
+	rows, err := userService.database.Query(query, userId)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get user invites %w", err)
+	}
+	defer rows.Close()
+
+	var groupInvites []dto.InviteResponse
+	for rows.Next() {
+		var inv dto.InviteResponse
+		var invitedByUser string
+		err := rows.Scan(&inv.Token, &inv.GroupId, &inv.GroupName, &invitedByUser)
+		if err != nil {
+			return nil, err
+		}
+
+		inviter, err := userService.GetUserById(invitedByUser)
+		if err != nil {
+			return nil, err
+		}
+		inv.InviterName = inviter.Name
+		groupInvites = append(groupInvites, inv)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return groupInvites, nil
+}
+
+func (userService *UserService) JoinGroup(userId, groupId string) error {
+	query := "INSERT INTO members (user_id, group_id, joined_at) VALUES (?, ?, ?)"
+	_, err := userService.database.Exec(query, userId, groupId, time.Now().String())
+	if err != nil {
+		return fmt.Errorf("failed to create member for group: %w", err)
+	}
+
+	return nil
+}
+
+func (userService *UserService) RemoveInvite(token string) error {
+	query := "DELETE invitations WHERE token = ?"
+	_, err := userService.database.Exec(query, token)
+	if err != nil {
+		return fmt.Errorf("failed to delete invitation: %w", err)
+	}
+
+	return nil
 }

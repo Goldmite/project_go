@@ -10,3 +10,9 @@ type InviteRequest struct {
 	GroupId   string   `form:"group_id"`
 	InvitedBy string   `form:"invited_by"`
 }
+
+type AcceptRequest struct {
+	Token   string `json:"token"`
+	UserId  string `json:"user_id"`
+	GroupId string `json:"group_id"`
+}

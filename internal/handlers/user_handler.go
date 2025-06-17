@@ -59,3 +59,44 @@ func (userHandler *UserHandler) GetUserHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, res)
 }
+
+func (userHandler *UserHandler) GetUserInvitesHandler(c *gin.Context) {
+	userId := c.Param("id")
+	res, err := userHandler.userService.GetUserInvites(userId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, res)
+}
+
+func (userHandler *UserHandler) AcceptInvitationHandler(c *gin.Context) {
+	var req dto.AcceptRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := userHandler.userService.JoinGroup(req.UserId, req.GroupId); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := userHandler.userService.RemoveInvite(req.Token); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, req)
+}
+
+func (userHandler *UserHandler) DeclineInvitationHandler(c *gin.Context) {
+	token := c.Param("token")
+	if err := userHandler.userService.RemoveInvite(token); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, token)
+}

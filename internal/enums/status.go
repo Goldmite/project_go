@@ -3,8 +3,6 @@ package enums
 type Status string
 
 const (
-	Pending  Status = "pending"
-	Accepted Status = "accepted"
-	Declined Status = "declined"
-	Expired  Status = "expired"
+	Pending Status = "pending"
+	Expired Status = "expired"
 )
