@@ -17,7 +17,7 @@ func NewGroupHandler(gs *services.GroupService) *GroupHandler {
 	return &GroupHandler{groupService: gs}
 }
 
-func (groupHandler *GroupHandler) CreateGroup(c *gin.Context) {
+func (groupHandler *GroupHandler) CreateGroupHandler(c *gin.Context) {
 	groupName := c.Param("name")
 	id, err := groupHandler.groupService.CreateGroup(groupName)
 	if err != nil {
@@ -28,7 +28,7 @@ func (groupHandler *GroupHandler) CreateGroup(c *gin.Context) {
 	c.JSON(http.StatusCreated, id)
 }
 
-func (groupHandler *GroupHandler) SendInvites(c *gin.Context) {
+func (groupHandler *GroupHandler) SendInvitesHandler(c *gin.Context) {
 	var req dto.InviteRequest
 	if err := c.ShouldBind(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
