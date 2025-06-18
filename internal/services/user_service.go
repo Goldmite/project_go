@@ -71,10 +71,10 @@ func (userService *UserService) GetUserByLogin(email, password string) (*dto.Get
 
 func (userService *UserService) GetUserInvites(userId string) ([]dto.InviteResponse, error) {
 	query :=
-		"SELECT i.token, i.group_id, g.name, i.invited_by" +
-			"FROM invitations i" +
-			"JOIN users u ON u.email = i.email_to" +
-			"JOIN groups g ON g.id = i.group_id" +
+		"SELECT i.token, i.group_id, g.name, i.invited_by " +
+			"FROM invitations i " +
+			"JOIN users u ON u.email = i.email_to " +
+			"JOIN groups g ON g.id = i.group_id " +
 			"WHERE u.id = ?"
 	rows, err := userService.database.Query(query, userId)
 	if err != nil {
@@ -116,7 +116,7 @@ func (userService *UserService) JoinGroup(userId, groupId string) error {
 }
 
 func (userService *UserService) RemoveInvite(token string) error {
-	query := "DELETE invitations WHERE token = ?"
+	query := "DELETE FROM invitations WHERE token = ?"
 	_, err := userService.database.Exec(query, token)
 	if err != nil {
 		return fmt.Errorf("failed to delete invitation: %w", err)

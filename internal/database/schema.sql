@@ -27,20 +27,20 @@ CREATE TABLE IF NOT EXISTS views (
     FOREIGN KEY (book_id) REFERENCES books(isbn) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS groups {
+CREATE TABLE IF NOT EXISTS groups (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     created_at TEXT NOT NULL
-};
+);
 
-CREATE TABLE IF NOT EXISTS members {
+CREATE TABLE IF NOT EXISTS members (
     user_id TEXT,
     group_id TEXT,
+    joined_at TEXT NOT NULL,
     PRIMARY KEY (user_id, group_id),
-    joined_at TEXT NOT NULL,   
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE
-}
+);
 
 CREATE TABLE IF NOT EXISTS invitations (
     token TEXT PRIMARY KEY,

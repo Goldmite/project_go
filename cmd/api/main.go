@@ -36,9 +36,9 @@ func main() {
 	api.POST("/books", bookHandler.AddNewBookForUserHandler)
 	api.POST("/groups/:name", groupHandler.CreateGroupHandler)
 	api.POST("/groups/invites", groupHandler.SendInvitesHandler)
-	api.GET("/groups/invites", userHandler.GetUserInvitesHandler)
+	api.GET("/groups/invites/:id", userHandler.GetUserInvitesHandler)
 	api.POST("/groups/invites/accept", userHandler.AcceptInvitationHandler)
-	api.DELETE("/groups/invites/decline", userHandler.DeclineInvitationHandler)
+	api.DELETE("/groups/invites/:token", userHandler.DeclineInvitationHandler)
 
 	router.Run(":3000")
 }
