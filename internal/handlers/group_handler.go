@@ -38,7 +38,7 @@ func (groupHandler *GroupHandler) SendInvitesHandler(c *gin.Context) {
 		invite := models.NewInvitationFromRequest(req, nr)
 		err := groupHandler.groupService.CreateInvite(*invite)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 			return
 		}
 	}

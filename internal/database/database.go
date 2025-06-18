@@ -11,8 +11,13 @@ func Connect() (*sql.DB, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to open db: %w", err)
 	}
-
 	fmt.Println("Connected to the SQLite database successfully.")
+
+	_, err = db.Exec("PRAGMA foreign_keys = ON;")
+	if err != nil {
+		db.Close()
+		return nil, fmt.Errorf("failed to enable foreign keys: %w", err)
+	}
 
 	sqlBytes, err := os.ReadFile("internal/database/schema.sql")
 	if err != nil {

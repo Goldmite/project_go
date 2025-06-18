@@ -30,7 +30,7 @@ func (groupService *GroupService) CreateInvite(inv models.Invitation) error {
 	query := "INSERT INTO invitations (token, email_to, group_id, invited_by, status, sent_at, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
 	_, err := groupService.database.Exec(query, inv.Token, inv.EmailTo, inv.GroupId, inv.InvitedBy, inv.Status, inv.SentAt, inv.ExpiresAt)
 	if err != nil {
-		return fmt.Errorf("failed to create invite %w", err)
+		return fmt.Errorf("failed to create invite for %s %w", inv.EmailTo, err)
 	}
 
 	return nil
