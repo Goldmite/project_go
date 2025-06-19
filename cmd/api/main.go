@@ -34,11 +34,11 @@ func main() {
 	api.POST("/users/login", userHandler.GetUserHandler) // Login | by email and password
 	api.GET("/books/user/:id", bookHandler.GetAllUserBooksHandler)
 	api.POST("/books", bookHandler.AddNewBookForUserHandler)
-	api.POST("/groups/:name", groupHandler.CreateGroupHandler)
+	api.POST("/groups", groupHandler.CreateGroupHandler)
 	api.POST("/groups/invites", groupHandler.SendInvitesHandler)
 	api.GET("/groups/invites/:id", userHandler.GetUserInvitesHandler)
-	api.POST("/groups/invites/accept", userHandler.AcceptInvitationHandler)
-	api.DELETE("/groups/invites/:token", userHandler.DeclineInvitationHandler)
+	api.POST("/groups/invites/accept", groupHandler.AcceptInvitationHandler)
+	api.DELETE("/groups/invites/decline", groupHandler.DeclineInvitationHandler)
 
 	router.Run(":3000")
 }

@@ -12,7 +12,6 @@ type FetchBookResponse struct {
 }
 
 type InviteResponse struct {
-	Token       string `json:"token"`
 	GroupId     string `json:"group_id"`
 	GroupName   string `json:"group_name"`
 	InviterName string `json:"inviter_name"`

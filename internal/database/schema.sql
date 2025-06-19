@@ -43,13 +43,13 @@ CREATE TABLE IF NOT EXISTS members (
 );
 
 CREATE TABLE IF NOT EXISTS invitations (
-    token TEXT PRIMARY KEY,
     email_to TEXT NOT NULL,
     group_id TEXT NOT NULL,
     invited_by TEXT NOT NULL,
     status TEXT DEFAULT 'pending',
     sent_at TEXT NOT NULL,
     expires_at TEXT NOT NULL,
+    PRIMARY KEY (email_to, group_id),
     FOREIGN KEY (email_to) REFERENCES users(email) ON DELETE CASCADE,
     FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE,
     FOREIGN KEY (invited_by) REFERENCES users(id) ON DELETE CASCADE

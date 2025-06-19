@@ -12,7 +12,12 @@ type InviteRequest struct {
 }
 
 type AcceptRequest struct {
-	Token   string `json:"token"`
-	UserId  string `json:"user_id"`
-	GroupId string `json:"group_id"`
+	UserId    string `json:"user_id"`
+	UserEmail string `json:"email"`
+	GroupId   string `json:"group_id"`
+}
+
+type DeclineRequest struct {
+	UserEmail string `json:"email"`
+	GroupId   string `json:"group_id"`
 }
