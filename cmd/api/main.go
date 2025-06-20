@@ -17,6 +17,8 @@ func main() {
 	bookHandler := handlers.NewBookHandler(bookService)
 	userService := services.NewUserService(db)
 	userHandler := handlers.NewUserHandler(userService)
+	groupService := services.NewGroupService(db)
+	groupHandler := handlers.NewGroupHandler(groupService)
 
 	router := gin.Default()
 	api := router.Group("/api")
@@ -25,13 +27,18 @@ func main() {
 			c.JSON(200, gin.H{"status": "ready"})
 		})
 	}
-	//api.POST("/books", bookHandler.CreateBookHandler)
+
 	api.GET("/books/:isbn", bookHandler.FetchByIsbnFromApiHandler)
 	api.POST("/users/signup", userHandler.CreateUserHandler) // Register
 	api.GET("/users/:id", userHandler.GetUserHandler)
 	api.POST("/users/login", userHandler.GetUserHandler) // Login | by email and password
 	api.GET("/books/user/:id", bookHandler.GetAllUserBooksHandler)
 	api.POST("/books", bookHandler.AddNewBookForUserHandler)
+	api.POST("/groups", groupHandler.CreateGroupHandler)
+	api.POST("/groups/invites", groupHandler.SendInvitesHandler)
+	api.GET("/groups/invites/:id", userHandler.GetUserInvitesHandler)
+	api.POST("/groups/invites/accept", groupHandler.AcceptInvitationHandler)
+	api.DELETE("/groups/invites/decline", groupHandler.DeclineInvitationHandler)
 
 	router.Run(":3000")
 }
