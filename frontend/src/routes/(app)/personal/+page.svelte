@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import PageHeader from '../../../components/PageHeader.svelte';
 	import BookGrid from '../../../components/shelf/BookGrid.svelte';
 	import AddBookModal from '../../../components/shelf/Modal.svelte';
-	import type { ActionData, PageProps } from './$types';
+	import type { PageProps } from './$types';
 
 	let { data, form }: PageProps = $props();
 	let isOpen = $state(false);
@@ -26,7 +27,7 @@
 {/snippet}
 
 <div class="m-20 p-10">
-	<h1 class="p-4 text-4xl font-bold">Your shelf</h1>
+	<PageHeader>Your shelf</PageHeader>
 	<BookGrid books={data.books}>
 		<button
 			onclick={() => (isOpen = !isOpen)}

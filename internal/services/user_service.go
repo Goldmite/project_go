@@ -103,3 +103,29 @@ func (userService *UserService) GetUserInvites(userId string) ([]dto.InviteRespo
 
 	return groupInvites, nil
 }
+
+func (userService *UserService) GetGroupMembers(groupId string) ([]dto.GetUserResponse, error) {
+	query := "SELECT u.id, u.name, u.email FROM users u JOIN members m ON u.id = m.user_id WHERE m.group_id = ?"
+
+	rows, err := userService.database.Query(query, groupId)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get group members: %w", err)
+	}
+	defer rows.Close()
+
+	var groupMembers []dto.GetUserResponse
+	for rows.Next() {
+		var member dto.GetUserResponse
+		err := rows.Scan(&member.ID, &member.Name, &member.Email)
+		if err != nil {
+			return nil, err
+		}
+
+		groupMembers = append(groupMembers, member)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return groupMembers, nil
+}
