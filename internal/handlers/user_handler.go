@@ -59,3 +59,25 @@ func (userHandler *UserHandler) GetUserHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, res)
 }
+
+func (userHandler *UserHandler) GetUserInvitesHandler(c *gin.Context) {
+	userId := c.Param("id")
+	res, err := userHandler.userService.GetUserInvites(userId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, res)
+}
+
+func (userHandler *UserHandler) GetGroupMembersHandler(c *gin.Context) {
+	groupId := c.Param("id")
+	res, err := userHandler.userService.GetGroupMembers(groupId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, res)
+}

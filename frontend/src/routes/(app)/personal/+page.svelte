@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import PageHeader from '../../../components/PageHeader.svelte';
 	import BookGrid from '../../../components/shelf/BookGrid.svelte';
 	import AddBookModal from '../../../components/shelf/Modal.svelte';
 	import type { PageProps } from './$types';
@@ -25,21 +26,20 @@
 	<p class="text-sm/4 font-bold"><span class="bg-logo-red/90">{msg}</span></p>
 {/snippet}
 
-
-<h1 class="py-4 text-4xl font-bold">Your shelf</h1>
+<PageHeader>Your shelf</PageHeader>
 <BookGrid books={data.books}>
 	<button
 		onclick={() => (isOpen = !isOpen)}
 		ontransitionend={() => resetForm()}
 		class={[
-			'flipCover addBookCard w-42 h-60 sm:w-56 sm:h-84 bg-light dark:bg-dark z-1 border p-4 text-8xl font-extralight hover:border-2 hover:font-light',
+			'flipCover addBookCard bg-light dark:bg-dark z-1 border p-4 text-8xl font-extralight hover:border-2 hover:font-light',
 			{ isOpen }
 		]}
 	>
 		<div class="front bg-logo-blue/20">+</div>
 		<div class="back bg-dark/30 dark:bg-light/70">x</div>
 	</button>
-	<div class="addBookCard w-42 h-60 sm:w-56 sm:h-84 bg-light absolute">
+	<div class="addBookCard bg-light absolute">
 		<AddBookModal>
 			<form
 				method="POST"
@@ -78,7 +78,6 @@
 		</AddBookModal>
 	</div>
 </BookGrid>
-
 
 <style>
 	.addBookCard {

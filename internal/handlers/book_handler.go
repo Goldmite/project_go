@@ -93,3 +93,14 @@ func (bookHandler *BookHandler) GetAllUserBooksHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, userBooks)
 }
+
+func (bookHandler *BookHandler) GetAllGroupBooksHandler(c *gin.Context) {
+	groupId := c.Param("id")
+	groupBooks, err := bookHandler.bookService.GetAllGroupBooks(groupId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, groupBooks)
+}

@@ -102,7 +102,35 @@ func (bookService *BookService) GetAllUserBooks(userId string) ([]models.BookRes
 	}
 	defer rows.Close()
 
-	var userBooks []models.BookResponse
+	userBooks, err := GetAllBooksHelper(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	return userBooks, nil
+}
+
+func (bookService *BookService) GetAllGroupBooks(groupId string) ([]models.BookResponse, error) {
+	query := "SELECT isbn, title, authors, cover_url FROM books b " +
+		"JOIN views v ON b.isbn = v.book_id " +
+		"JOIN members m ON v.user_id = m.user_id " +
+		"WHERE m.group_id = ?"
+	rows, err := bookService.database.Query(query, groupId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	groupBooks, err := GetAllBooksHelper(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	return groupBooks, nil
+}
+
+func GetAllBooksHelper(rows *sql.Rows) ([]models.BookResponse, error) {
+	var books []models.BookResponse
 	for rows.Next() {
 		var b models.BookResponse
 		var authorsJsons string
@@ -114,12 +142,12 @@ func (bookService *BookService) GetAllUserBooks(userId string) ([]models.BookRes
 		if err != nil {
 			return nil, fmt.Errorf("failed to parse authors JSON: %w", err)
 		}
-		userBooks = append(userBooks, b)
+		books = append(books, b)
 	}
 
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
 
-	return userBooks, nil
+	return books, nil
 }

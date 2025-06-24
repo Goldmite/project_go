@@ -10,3 +10,9 @@ type FetchBookResponse struct {
 	Title   string   `json:"title"`
 	Authors []string `json:"authors"`
 }
+
+type InviteResponse struct {
+	GroupId     string `json:"group_id"`
+	GroupName   string `json:"group_name"`
+	InviterName string `json:"inviter_name"`
+}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import BookCard from './BookCard.svelte';
 
-	let { books, children } = $props();
+	let { books, children = () => {} } = $props();
 </script>
 
 <div class="grid justify-start gap-4
@@ -10,6 +10,6 @@
 >
 	{@render children()}
 	{#each books as book (book.isbn)}
-		<BookCard title={book.title} authors={book.authors} cover={book.cover}></BookCard>
+		<BookCard title={book.title} authors={book.authors} cover={book.cover} />
 	{/each}
 </div>
