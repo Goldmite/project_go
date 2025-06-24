@@ -32,14 +32,14 @@
 		onclick={() => (isOpen = !isOpen)}
 		ontransitionend={() => resetForm()}
 		class={[
-			'flipCover addBookCard bg-light dark:bg-dark z-1 border p-4 text-8xl font-extralight hover:border-2 hover:font-light',
+			'flipCover addBookCard bg-light dark:bg-dark z-1 h-60 w-42 border p-4 text-8xl font-extralight hover:border-2 hover:font-light sm:h-84 sm:w-56',
 			{ isOpen }
 		]}
 	>
 		<div class="front bg-logo-blue/20">+</div>
 		<div class="back bg-dark/30 dark:bg-light/70">x</div>
 	</button>
-	<div class="addBookCard bg-light absolute">
+	<div class="addBookCard bg-light absolute h-60 w-42 sm:h-84 sm:w-56">
 		<AddBookModal>
 			<form
 				method="POST"

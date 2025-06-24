@@ -16,7 +16,7 @@ export const actions = {
 
 		const userJson = await res.json();
 		user.set(userJson);
-		redirect(303, '/personal')
+		redirect(303, '/personal');
 	},
 	signup: async (event) => {
 		const data = await event.request.formData();

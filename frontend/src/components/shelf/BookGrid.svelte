@@ -4,8 +4,9 @@
 	let { books, children = () => {} } = $props();
 </script>
 
-<div class="grid justify-start gap-4
-	grid-cols-[repeat(auto-fit,minmax(10.5rem,auto))]
+<div
+	class="grid grid-cols-[repeat(auto-fit,minmax(10.5rem,auto))] justify-start
+	gap-4
 	sm:grid-cols-[repeat(auto-fit,minmax(14rem,auto))]"
 >
 	{@render children()}

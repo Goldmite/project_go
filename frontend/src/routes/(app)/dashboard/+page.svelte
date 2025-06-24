@@ -1,16 +1,12 @@
 <script lang="ts">
 	import CurrentlyReading from '../../../components/dashboard/CurrentlyReading.svelte';
 	import Grid from '../../../components/dashboard/Grid.svelte';
-    import NavCard from '../../../components/dashboard/NavCard.svelte';
-
+	import NavCard from '../../../components/dashboard/NavCard.svelte';
 </script>
 
-
-
 {#snippet header(title: string)}
-    <h1 class="text-lg sm:text-2xl font-bold ">{title}</h1>
+	<h1 class="text-lg font-bold sm:text-2xl">{title}</h1>
 {/snippet}
-
 
 <!--
 <Grid>
@@ -76,19 +72,18 @@
     
 </Grid>
 -->
-<div class="flex justify-between ">
-    <div class="flex-1">
-    {@render header("Shelves")}
-    <Grid>
-        <NavCard> {@render header("Personal")} </NavCard>
-        <NavCard> {@render header("Group1")} </NavCard>
-        <NavCard> {@render header("Group2")} </NavCard>
-        <NavCard> {@render header("Group3")} </NavCard>
-    </Grid>
-    </div>
-    
+<div class="flex justify-between">
+	<div class="flex-1">
+		{@render header('Shelves')}
+		<Grid>
+			<NavCard>{@render header('Personal')}</NavCard>
+			<NavCard>{@render header('Group1')}</NavCard>
+			<NavCard>{@render header('Group2')}</NavCard>
+			<NavCard>{@render header('Group3')}</NavCard>
+		</Grid>
+	</div>
 
-    <CurrentlyReading> {@render header("Currently Reading")} </CurrentlyReading>
+	<CurrentlyReading>{@render header('Currently Reading')}</CurrentlyReading>
 </div>
 
 <style>

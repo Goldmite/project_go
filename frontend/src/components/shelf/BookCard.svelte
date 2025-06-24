@@ -3,7 +3,7 @@
 </script>
 
 <div class="w-42 sm:w-56">
-	<div class="h-60 sm:h-84 mb-2">
+	<div class="mb-2 h-60 sm:h-84">
 		<img class="h-full rounded-md border object-cover" src={cover} alt={title} />
 	</div>
 	<p class="font-semibold">{title}</p>
