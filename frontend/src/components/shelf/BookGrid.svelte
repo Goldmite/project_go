@@ -1,7 +1,7 @@
 <script lang="ts">
 	import BookCard from './BookCard.svelte';
 
-	let { books, children } = $props();
+	let { books, children = () => {} } = $props();
 </script>
 
 <div class="grid grid-cols-[repeat(auto-fit,minmax(14rem,auto))] justify-start gap-4">
