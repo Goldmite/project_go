@@ -7,9 +7,9 @@ import (
 )
 
 type Group struct {
-	Id        string
-	Name      string
-	CreatedAt string
+	Id        string `json:"id"`
+	Name      string `json:"name"`
+	CreatedAt string `json:"created_at"`
 }
 
 func NewGroupFromName(name string) *Group {

@@ -7,6 +7,6 @@
 <div class="grid grid-cols-[repeat(auto-fit,minmax(14rem,auto))] justify-start gap-4">
 	{@render children()}
 	{#each books as book (book.isbn)}
-		<BookCard title={book.title} authors={book.authors} cover={book.cover}></BookCard>
+		<BookCard title={book.title} authors={book.authors} cover={book.cover} />
 	{/each}
 </div>

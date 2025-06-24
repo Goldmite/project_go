@@ -34,6 +34,17 @@ func (groupHandler *GroupHandler) CreateGroupHandler(c *gin.Context) {
 	c.JSON(http.StatusCreated, groupId)
 }
 
+func (groupHandler *GroupHandler) GetAllUserGroupsHandler(c *gin.Context) {
+	userId := c.Param("id")
+	groups, err := groupHandler.groupService.GetAllUserGroups(userId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, groups)
+}
+
 func (groupHandler *GroupHandler) SendInvitesHandler(c *gin.Context) {
 	var req dto.InviteRequest
 	if err := c.ShouldBind(&req); err != nil {

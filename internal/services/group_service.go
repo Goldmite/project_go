@@ -27,6 +27,32 @@ func (groupService *GroupService) CreateGroup(name string) (*string, error) {
 	return &g.Id, nil
 }
 
+func (groupService *GroupService) GetAllUserGroups(userId string) ([]models.Group, error) {
+	query := "SELECT g.id, g.name, g.created_at FROM groups g JOIN members m ON g.id = m.group_id WHERE m.user_id = ?"
+	rows, err := groupService.database.Query(query, userId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var userGroups []models.Group
+	for rows.Next() {
+		var g models.Group
+		err := rows.Scan(&g.Id, &g.Name, &g.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+
+		userGroups = append(userGroups, g)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return userGroups, nil
+}
+
 func (groupService *GroupService) CreateInvite(inv models.Invitation) error {
 	query := "INSERT INTO invitations (email_to, group_id, invited_by, status, sent_at, expires_at) VALUES (?, ?, ?, ?, ?, ?)"
 	_, err := groupService.database.Exec(query, inv.EmailTo, inv.GroupId, inv.InvitedBy, inv.Status, inv.SentAt, inv.ExpiresAt)
