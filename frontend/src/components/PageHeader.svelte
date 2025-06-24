@@ -1,8 +1,7 @@
 <script lang="ts">
-    let { children } = $props();
-
+	let { children } = $props();
 </script>
 
 <h1 class="p-4 text-4xl font-bold">
-    {@render children()}
+	{@render children()}
 </h1>
