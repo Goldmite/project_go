@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
+	import AddGroupModal from '../../components/shelf/shared/AddGroupModal.svelte';
 	import type { LayoutProps } from './$types';
 
 	let { data, children }: LayoutProps = $props();
 	let currentPage = $derived(page.url.pathname);
+	let isAddGroupOpen = $state(false);
 </script>
 
 {#snippet AppNavButton(pageName: string, pageUrl: string)}
@@ -26,6 +28,9 @@
 		<div class="group relative top-full min-w-max">
 			{@render AppNavButton('Shared', '/shared')}
 			<div class="absolute z-10 hidden min-w-max flex-col group-focus-within:flex group-hover:flex">
+				<button onclick={() => isAddGroupOpen = true}>
+					+
+				</button>
 				{#each data.shared as shelf}
 					{@render AppNavButton(shelf.name, `/shared/${shelf.name.replaceAll(' ', '%20')}`)}
 				{/each}
@@ -33,4 +38,7 @@
 		</div>
 	</div>
 	{@render children()}
+	{#if isAddGroupOpen}
+		<AddGroupModal bind:isOpen={isAddGroupOpen}></AddGroupModal>
+	{/if}
 </div>

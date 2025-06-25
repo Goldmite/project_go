@@ -45,7 +45,7 @@
 				method="POST"
 				bind:this={addBookForm}
 				use:enhance
-				class="mx-3 flex h-[100%] flex-col space-y-6 font-serif"
+				class="mx-3 flex h-full flex-col space-y-6 font-serif"
 			>
 				<div class="w-full text-lg">
 					<label for="isbn" class="block p-2">i. ISBN</label>
