@@ -5,9 +5,6 @@ import { fail, type Actions } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async () => {
 	const currUser = get(user);
-	if (!currUser) {
-		console.log('No user, redirect to login page');
-	}
 	const res = await fetch(`http://localhost:3000/api/books/user/${currUser?.id}`);
 	const books = await res.json();
 	return { books };

@@ -10,7 +10,7 @@
 	function toggleActive() {
 		isLoginSelected = !isLoginSelected;
 	}
-
+	let showPassword = $state(false);
 	let password = $state('');
 	let email = $state('');
 
@@ -65,15 +65,26 @@
 	<div>
 		<div>
 			<label for="password" class="block p-2">Password</label>
-			<input
-				class="outline-status-logo-done focus:invalid:outline-logo-red focus:outline-3"
-				bind:value={password}
-				name="password"
-				type="password"
-				maxlength="128"
-				required
-				bind:this={inputStrength}
-			/>
+			<div class="flex items-center">
+				<input
+					class="outline-status-logo-done focus:invalid:outline-logo-red focus:outline-3"
+					bind:value={password}
+					name="password"
+					type={showPassword ? 'text' : 'password'}
+					maxlength="128"
+					required
+					bind:this={inputStrength}
+				/>
+				<!-- svelte-ignore a11y_no_static_element_interactions -->
+				<!-- svelte-ignore a11y_click_events_have_key_events -->
+				<span
+					class="{showPassword
+						? 'icon-[solar--eye-closed-linear]'
+						: 'icon-[solar--eye-linear]'} -ml-8 text-xl"
+					onclick={() => (showPassword = !showPassword)}
+				>
+				</span>
+			</div>
 		</div>
 		{#if !isLoginSelected}
 			<progress

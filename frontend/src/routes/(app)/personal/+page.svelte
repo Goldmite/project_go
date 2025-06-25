@@ -26,65 +26,61 @@
 	<p class="text-sm/4 font-bold"><span class="bg-logo-red/90">{msg}</span></p>
 {/snippet}
 
-<div class="m-20 p-10">
-	<PageHeader>Your shelf</PageHeader>
-	<BookGrid books={data.books}>
-		<button
-			onclick={() => (isOpen = !isOpen)}
-			ontransitionend={() => resetForm()}
-			class={[
-				'flipCover addBookCard bg-light dark:bg-dark z-1 border p-4 text-8xl font-extralight hover:border-2 hover:font-light',
-				{ isOpen }
-			]}
-		>
-			<div class="front bg-logo-blue/20">+</div>
-			<div class="back bg-dark/30 dark:bg-light/70">x</div>
-		</button>
-		<div class="addBookCard bg-light absolute">
-			<AddBookModal>
-				<form
-					method="POST"
-					bind:this={addBookForm}
-					use:enhance
-					class="mx-3 flex h-[100%] flex-col space-y-6 font-serif"
+<PageHeader>Your shelf</PageHeader>
+<BookGrid books={data.books}>
+	<button
+		onclick={() => (isOpen = !isOpen)}
+		ontransitionend={() => resetForm()}
+		class={[
+			'flipCover addBookCard bg-light dark:bg-dark z-1 h-60 w-42 border p-4 text-8xl font-extralight hover:border-2 hover:font-light sm:h-84 sm:w-56',
+			{ isOpen }
+		]}
+	>
+		<div class="front bg-logo-blue/20">+</div>
+		<div class="back bg-dark/30 dark:bg-light/70">x</div>
+	</button>
+	<div class="addBookCard bg-light absolute h-60 w-42 sm:h-84 sm:w-56">
+		<AddBookModal>
+			<form
+				method="POST"
+				bind:this={addBookForm}
+				use:enhance
+				class="mx-3 flex h-[100%] flex-col space-y-6 font-serif"
+			>
+				<div class="w-full text-lg">
+					<label for="isbn" class="block p-2">i. ISBN</label>
+					<input
+						class="outline-status-logo-done focus:invalid:outline-logo-red mb-1 focus:outline-3"
+						bind:value={isbn}
+						oninput={() => (isbn = isbn.replace(/\D/g, ''))}
+						name="isbn"
+						type="text"
+						placeholder="Enter ISBN..."
+						minlength="10"
+						maxlength="13"
+						required
+					/>
+					{#if isFormError}
+						{#if form?.duplicate}
+							{@render errorMsg('I. You already have this book.')}{/if}
+						{#if form?.incorrect}
+							{@render errorMsg('II. Must be exactly 10 or 13 digits.')}{/if}
+						{#if form?.notfound}
+							{@render errorMsg('III. Not found.')}{/if}
+					{/if}
+				</div>
+				<button
+					class="bg-logo-blue active:inset-shadow-md mt-auto w-full rounded-2xl p-2 text-lg hover:outline-1 focus:outline-1 active:text-base"
 				>
-					<div class="w-full text-lg">
-						<label for="isbn" class="block p-2">i. ISBN</label>
-						<input
-							class="outline-status-logo-done focus:invalid:outline-logo-red mb-1 focus:outline-3"
-							bind:value={isbn}
-							oninput={() => (isbn = isbn.replace(/\D/g, ''))}
-							name="isbn"
-							type="text"
-							placeholder="Enter ISBN..."
-							minlength="10"
-							maxlength="13"
-							required
-						/>
-						{#if isFormError}
-							{#if form?.duplicate}
-								{@render errorMsg('I. You already have this book.')}{/if}
-							{#if form?.incorrect}
-								{@render errorMsg('II. Must be exactly 10 or 13 digits.')}{/if}
-							{#if form?.notfound}
-								{@render errorMsg('III. Not found.')}{/if}
-						{/if}
-					</div>
-					<button
-						class="bg-logo-blue active:inset-shadow-md mt-auto w-full rounded-2xl p-2 text-lg hover:outline-1 focus:outline-1 active:text-base"
-					>
-						Add book
-					</button>
-				</form>
-			</AddBookModal>
-		</div>
-	</BookGrid>
-</div>
+					Add book
+				</button>
+			</form>
+		</AddBookModal>
+	</div>
+</BookGrid>
 
 <style>
 	.addBookCard {
-		width: 14rem;
-		height: 20rem;
 		color: var(--color-logo-blue);
 		border-color: var(--color-logo-blue);
 	}

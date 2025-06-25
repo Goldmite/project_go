@@ -1,4 +1,4 @@
-import { fail, type Actions } from '@sveltejs/kit';
+import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { user } from '$lib/stores/user';
 
 export const actions = {
@@ -16,8 +16,7 @@ export const actions = {
 
 		const userJson = await res.json();
 		user.set(userJson);
-
-		return { success: true };
+		redirect(303, '/personal');
 	},
 	signup: async (event) => {
 		const data = await event.request.formData();
