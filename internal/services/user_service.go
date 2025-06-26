@@ -39,11 +39,17 @@ func (userService *UserService) CreateUser(r models.CreateUserRequest) (*string,
 	return &u.ID, nil
 }
 
-func (userService *UserService) GetUserById(id string) (*dto.GetUserResponse, error) {
-	query := "SELECT id, name, email FROM users WHERE id = ?"
+func (userService *UserService) GetUserByIdOrEmail(id, email string) (*dto.GetUserResponse, error) {
+	identifyBy := email
+	queryBy := "email"
+	if email == "" {
+		identifyBy = id
+		queryBy = "id"
+	}
+	query := "SELECT id, name, email FROM users WHERE " + queryBy + " = ?"
 
 	var res dto.GetUserResponse
-	err := userService.database.QueryRow(query, id).Scan(&res.ID, &res.Name, &res.Email)
+	err := userService.database.QueryRow(query, identifyBy).Scan(&res.ID, &res.Name, &res.Email)
 	if err != nil {
 		return nil, fmt.Errorf("user not found %w", err)
 	}
@@ -90,7 +96,7 @@ func (userService *UserService) GetUserInvites(userId string) ([]dto.InviteRespo
 			return nil, err
 		}
 
-		inviter, err := userService.GetUserById(invitedByUser)
+		inviter, err := userService.GetUserByIdOrEmail(invitedByUser, "")
 		if err != nil {
 			return nil, err
 		}

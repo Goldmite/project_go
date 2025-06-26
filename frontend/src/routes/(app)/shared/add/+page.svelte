@@ -1,13 +1,18 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
-	import PageHeader from "../../PageHeader.svelte";
-	import StepProgressBar from "../../StepProgressBar.svelte";
-	import MembersList from "./MembersList.svelte";
+	import type { User } from "$lib/types/user";
+	import ErrorMsg from "../../../../components/errors/ErrorMsg.svelte";
+	import ModalWrapper from "../../../../components/ModalWrapper.svelte";
+	import PageSubheader from "../../../../components/PageSubheader.svelte";
+	import MembersList from "../../../../components/shelf/shared/MembersList.svelte";
+	import StepProgressBar from "../../../../components/StepProgressBar.svelte";
+	import type { PageProps } from "./$types";
 
-    let { isOpen = $bindable() } = $props();
+    let { data, form }: PageProps = $props();
+	let isOpen = $state(false);
     let step = $state(1);
-    let inputEmail = $state('');
-    let emails: string[] = [];
+    const invitees: User[] = $state([]);
+    const invIds = new Set<string>();
 
     function handleArrows(next: boolean) {
         if (next) {
@@ -15,13 +20,17 @@
         } else {
             if (step > 1) step--;
         }
-    }
-    function handleInvite() {
-        // get user by email to check if exists, 
-        // if ok then add email 
-        // otherwise show Not found or No such user
-        emails.push(inputEmail)
-    }
+    };
+    $effect(() => {
+        if (form?.success && !invIds.has(form.invitee.id) && invitees.length < 10) {
+            invitees.push({
+                id: form.invitee.id,
+                name: form.invitee.name,
+                email: form.invitee.email
+            });
+            invIds.add(form.invitee.id);
+        }
+    });
 </script>
 
 {#snippet arrowButton(next: boolean)}
@@ -32,13 +41,20 @@
     </button>
 {/snippet}
 
-<div class="flex flex-col font-sans border rounded-2xl h-[500px] w-full sm:w-1/4 px-8 py-4">
-    <PageHeader>Create shared shelf</PageHeader>
+<ModalWrapper bind:isOpen={isOpen}>
+<div class="flex flex-col font-sans bg-light text-dark border rounded-2xl h-[500px] w-full sm:w-1/4 px-8 py-4">
     <StepProgressBar currStep={step} />
-    
+    <div class="mx-4">
+        {#if step == 1}
+            <PageSubheader>I. Name your group</PageSubheader>
+        {:else if step == 2}
+            <PageSubheader>II. Invite your friends</PageSubheader>
+        {:else}
+            <PageSubheader>III. Create shared shelf</PageSubheader>
+        {/if}
+    </div>
     <form method="POST" use:enhance class="flex flex-col m-4">
         {#if step == 1}
-            <label for="name" class="block p-2">Group name</label>
             <input 
                 class="outline-status-logo-done focus:invalid:outline-logo-red focus:outline-3"
                 name="name"
@@ -48,12 +64,10 @@
                 required
             >
         {:else if step == 2}
-            <label for="name" class="block p-2">Invite others</label>
-            <div class="w-full flex flex-row ">
+            <div class="w-full flex flex-row mb-2">
                 <input 
                     class="w-4/5 outline-status-logo-done focus:invalid:outline-logo-red focus:outline-3"
-                    bind:value={inputEmail}
-                    onkeydown={handleInvite}
+                    
                     name="email"
                     type="email"
                     placeholder="Add friends..."
@@ -61,11 +75,19 @@
                     required
                 >
                 <button class="w-1/5 bold text-2xl "
-                    onclick={handleInvite}
+                    formaction="?/checkUser"
                 >+</button>
             </div>
-            <!-- TODO: FIX TO GET USERS AND THEN PASS NAME AND EMAIL TO MEMBERS FIELD-->
-            <MembersList members={emails}></MembersList>
+            {#if form?.notfound}
+                <ErrorMsg msg="I. User not found."></ErrorMsg>
+            {/if}
+            {#if invitees.length === 10}
+                <ErrorMsg msg="II. Can't invite more users."></ErrorMsg>
+            {/if}
+            
+            {#if invitees.length !== 0}
+                <MembersList members={invitees}></MembersList>
+            {/if}
         {:else}
             <button>Create</button>
         {/if}
@@ -75,7 +97,7 @@
         {#if step == 1}
             <button 
             class="active:inset-shadow-md mx-4 w-full rounded-2xl p-2 text-lg hover:outline-1 focus:outline-1 active:text-base bg-logo-red"
-            onclick={() => isOpen = false}>x</button>
+            onclick={() => history.back()}>x</button>
         {/if}
         {@render arrowButton(false)}
         {@render arrowButton(true)}
@@ -86,3 +108,4 @@
         {/if}
     </div>
 </div>
+</ModalWrapper>

@@ -1,17 +1,24 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { goto, preloadData, pushState } from '$app/navigation';
 	import { page } from '$app/state';
-	import AddGroupModal from '../../components/shelf/shared/AddGroupModal.svelte';
+	import AddGroupModalPage from './shared/add/+page.svelte';
 	import type { LayoutProps } from './$types';
 
 	let { data, children }: LayoutProps = $props();
 	let currentPage = $derived(page.url.pathname);
-	let isAddGroupOpen = $state(false);
 </script>
 
 {#snippet AppNavButton(pageName: string, pageUrl: string)}
 	<button
-		onclick={pageUrl != '/shared' ? () => goto(pageUrl) : null}
+		onclick={pageUrl != '/shared' ? async () => {
+			if (pageUrl == '/shared/add') {
+				const result = await preloadData(pageUrl);
+				if (result.type === 'loaded' && result.status === 200) {
+					pushState(pageUrl, { selected: result.data });
+				}
+			} else {
+				goto(pageUrl)
+			}} : null}
 		class={[
 			'bg-light dark:bg-dark hover:border-logo-red hover:shadow-logo-red h-12 w-full border p-3 font-sans font-bold shadow-lg',
 			{ 'bg-logo-red dark:bg-logo-red border-logo-red text-dark': currentPage.includes(pageUrl) }
@@ -28,9 +35,7 @@
 		<div class="group relative top-full min-w-max">
 			{@render AppNavButton('Shared', '/shared')}
 			<div class="absolute z-10 hidden min-w-max flex-col group-focus-within:flex group-hover:flex">
-				<button onclick={() => isAddGroupOpen = true}>
-					+
-				</button>
+				{@render AppNavButton('+', '/shared/add')}
 				{#each data.shared as shelf}
 					{@render AppNavButton(shelf.name, `/shared/${shelf.name.replaceAll(' ', '%20')}`)}
 				{/each}
@@ -38,7 +43,7 @@
 		</div>
 	</div>
 	{@render children()}
-	{#if isAddGroupOpen}
-		<AddGroupModal bind:isOpen={isAddGroupOpen}></AddGroupModal>
+	{#if page.state.selected}
+		<AddGroupModalPage data={page.state.selected} form={page.form} />
 	{/if}
 </div>

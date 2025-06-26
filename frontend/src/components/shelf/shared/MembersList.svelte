@@ -4,7 +4,7 @@
 	let { members, children = () => {} } = $props();
 </script>
 
-<div class="mb-6 flex">
+<div class="my-4 flex flex-wrap">
 	{#each members as m (m.id)}
 		<MemberPill username={m.name} email={m.email} />
 	{/each}

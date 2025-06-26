@@ -28,7 +28,7 @@ func main() {
 		})
 	}
 
-	api.GET("/users/:id", userHandler.GetUserHandler)
+	api.GET("/users/:email", userHandler.GetUserHandler)
 	api.POST("/users/signup", userHandler.CreateUserHandler) // Register
 	api.POST("/users/login", userHandler.GetUserHandler)     // Login | by email and password
 	api.GET("/users/groups/:id", userHandler.GetGroupMembersHandler)
