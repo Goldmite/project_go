@@ -3,10 +3,11 @@
 declare global {
 	namespace App {
 		// interface Error {}
-		// interface Locals {}
+		//interface Locals {}
 		// interface PageData {}
 		interface PageState {
-			selected
+			isLoginSelected: boolean;
+			selected;
 		}
 		// interface Platform {}
 	}

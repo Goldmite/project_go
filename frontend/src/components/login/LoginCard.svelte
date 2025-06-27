@@ -36,13 +36,5 @@
 			--tw-shadow: 2px 8px 8px var(--tw-shadow-color);
 			background-color: var(--color-light);
 		}
-
-		.dots {
-			background-image: radial-gradient(var(--color-logo-red) 0px, transparent 2px);
-			background-size: 20px 20px;
-		}
-		.dots.alternate {
-			--color-logo-red: var(--color-logo-blue);
-		}
 	}
 </style>
