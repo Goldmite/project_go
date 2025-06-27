@@ -6,7 +6,7 @@
 	import { zxcvbn } from '@zxcvbn-ts/core';
 	import { cubicOut } from 'svelte/easing';
 
-	let isLoginSelected = $derived(page.state);
+	let isLoginSelected = $derived(page.state.isLoginSelected);
 	function toggleActive() {
 		isLoginSelected = !isLoginSelected;
 	}

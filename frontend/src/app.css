@@ -20,4 +20,12 @@
 		padding: var(--spacing);
 		width: 100%;
 	}
+	
+	.dots {
+		background-image: radial-gradient(var(--color-logo-red) 0px, transparent 2px);
+		background-size: 20px 20px;
+	}
+	.dots.alternate {
+		--color-logo-red: var(--color-logo-blue);
+	}
 }

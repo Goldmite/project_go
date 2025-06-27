@@ -39,9 +39,9 @@ func (userHandler *UserHandler) CreateUserHandler(c *gin.Context) {
 func (userHandler *UserHandler) GetUserHandler(c *gin.Context) {
 	var res *dto.GetUserResponse
 	var err error
-	id := c.Param("id")
-	if id != "" {
-		res, err = userHandler.userService.GetUserById(id)
+	email := c.Param("email")
+	if email != "" {
+		res, err = userHandler.userService.GetUserByIdOrEmail("", email)
 	} else {
 		email := c.PostForm("email")
 		password := c.PostForm("password")

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import ErrorMsg from '../../../components/errors/ErrorMsg.svelte';
 	import PageHeader from '../../../components/PageHeader.svelte';
 	import BookGrid from '../../../components/shelf/BookGrid.svelte';
 	import AddBookModal from '../../../components/shelf/Modal.svelte';
@@ -45,7 +46,7 @@
 				method="POST"
 				bind:this={addBookForm}
 				use:enhance
-				class="mx-3 flex h-[100%] flex-col space-y-6 font-serif"
+				class="mx-3 flex h-full flex-col space-y-6 font-serif"
 			>
 				<div class="w-full text-lg">
 					<label for="isbn" class="block p-2">i. ISBN</label>
@@ -62,11 +63,11 @@
 					/>
 					{#if isFormError}
 						{#if form?.duplicate}
-							{@render errorMsg('I. You already have this book.')}{/if}
+							<ErrorMsg msg="I. You already have this book."></ErrorMsg>{/if}
 						{#if form?.incorrect}
-							{@render errorMsg('II. Must be exactly 10 or 13 digits.')}{/if}
+							<ErrorMsg msg="II. Must be exactly 10 or 13 digits."></ErrorMsg>{/if}
 						{#if form?.notfound}
-							{@render errorMsg('III. Not found.')}{/if}
+							<ErrorMsg msg="III. Not found."></ErrorMsg>{/if}
 					{/if}
 				</div>
 				<button
