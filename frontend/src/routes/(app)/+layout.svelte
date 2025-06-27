@@ -26,7 +26,7 @@
 				}
 			: null}
 		class={[
-			'bg-light dark:bg-dark hover:border-logo-red hover:shadow-logo-red h-12 w-full border p-3 font-sans font-bold shadow-lg',
+			'bg-light dark:bg-dark hover:border-logo-red hover:shadow-logo-red truncate min-h-12 w-full min-w-28 max-w-36 sm:max-w-full border p-3 font-sans font-bold shadow-lg',
 			{ 'bg-logo-red dark:bg-logo-red border-logo-red text-dark': currentPage.includes(pageUrl) }
 		]}
 	>
@@ -40,10 +40,10 @@
 		{@render AppNavButton('Personal', '/personal')}
 		<div class="group relative top-full min-w-max">
 			{@render AppNavButton('Shared', '/shared')}
-			<div class="absolute z-10 hidden border min-w-max flex-col overflow-y-scroll h-fit max-h-60.5 sm:max-h-84.5 group-focus-within:flex group-hover:flex">
+			<div class="absolute z-10 hidden border-y min-w-28 max-w-28 sm:max-w-46 h-fit max-h-60.5 sm:max-h-84.5 flex-col overflow-y-scroll group-focus-within:flex group-hover:flex">
 				{@render AppNavButton('+', '/shared/add')}
-				{#each data.shared as shelf}
-					{@render AppNavButton(shelf.name, `/shared/${shelf.name.replaceAll(' ', '%20')}`)}
+				{#each data.shared as shelf (shelf.id)}
+					{@render AppNavButton(shelf.name, `/shared/${shelf.id}`)}
 				{/each}
 			</div>
 		</div>

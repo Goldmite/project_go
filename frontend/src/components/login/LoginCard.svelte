@@ -6,7 +6,7 @@
 <!-- Safelist: login signup-->
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <div
-	class="card {shadowColorClass} text-dark m-8 h-[500px] w-full p-10 sm:w-1/4 {!isActive &&
+	class="card {shadowColorClass} text-dark m-8 h-[500px] w-full p-10 sm:w-2/3 md:w-1/2 lg:w-2/5 2xl:w-1/4 {!isActive &&
 		'dots brightness-95 backdrop-brightness-95'}"
 	class:alternate={shadowColorClass == 'signup'}
 	class:active={isActive}

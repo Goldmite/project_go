@@ -65,9 +65,9 @@
 	</button>
 {/snippet}
 
-<ModalWrapper bind:isOpen>
+<ModalWrapper>
 	<div
-		class="bg-light text-dark flex h-[500px] w-full flex-col rounded-2xl border px-8 py-4 font-sans sm:w-1/4"
+		class="bg-light text-dark flex h-[500px] w-full flex-col rounded-2xl border px-8 py-4 font-sans sm:w-2/3 md:w-1/2 lg:w-2/5 2xl:w-1/4"
 	>
 		<StepProgressBar currStep={step} />
 		<div class="mx-4">

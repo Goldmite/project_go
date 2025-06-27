@@ -3,7 +3,6 @@ import type { LayoutServerLoad } from './$types';
 import { get } from 'svelte/store';
 import { user } from '$lib/stores/user';
 import { groups } from '$lib/stores/group';
-import type { Group } from '$lib/types/group';
 
 export const load: LayoutServerLoad = async () => {
 	const loggedInUser = get(user);
@@ -16,11 +15,7 @@ export const load: LayoutServerLoad = async () => {
 		return fail(res.status);
 	}
 
-	const groupsData = await res.json();
-	const shared = groupsData.map((g: Group, index: number) => ({
-		...g,
-		name: `${g.name}-${index + 1}`
-	}));
+	const shared = await res.json();
 
 	groups.set(shared);
 	return { shared };

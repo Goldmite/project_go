@@ -38,12 +38,8 @@ export const actions = {
 		if (inviteRes.status != 200) {
 			return fail(inviteRes.status);
 		}
-		// DOESNT WORK BECAUSE LAYOUT HASNT CREATED GROUP NAME URL YET
-		const gotoGroup = get(groups).find((g) => g.id === groupId);
-		if (gotoGroup) {
-			redirect(303, `/shared/${gotoGroup?.name}`);
-		}
-		return { success: true, groupId };
+		// redirect to proxy to give time to get new group info
+		redirect(303, `/shared/redirect/${groupId}`);
 	},
 	checkUser: async (event) => {
 		const email = (await event.request.formData()).get('email') ?? '';

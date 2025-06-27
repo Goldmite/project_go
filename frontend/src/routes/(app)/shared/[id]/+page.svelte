@@ -7,7 +7,7 @@
 	let { data }: PageProps = $props();
 </script>
 
-<PageHeader>{data.currGroup?.name.split('-', 1)} shelf</PageHeader>
+<PageHeader>{data.currGroup?.name} shelf</PageHeader>
 <MembersList members={data.members}>
 	<button class=" border p-2">TEMPORARY INVITE BUTTON</button>
 </MembersList>
