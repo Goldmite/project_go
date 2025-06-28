@@ -1,15 +1,12 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { User } from '$lib/types/user';
 	import ErrorMsg from '../../errors/ErrorMsg.svelte';
 	import MembersList from './MembersList.svelte';
 
 	const MAX_INVITES = 7;
-	let { form, emails, required } = $props();
+	let { form, emails = $bindable(), required, invitees, invIds } = $props();
 
 	let input = $state('');
-	const invitees: User[] = $state([]);
-	const invIds = new Set<string>();
 	$effect(() => {
 		if (form?.fakesuccess && !invIds.has(form.invitee.id) && invitees.length < MAX_INVITES) {
 			input = '';
@@ -18,6 +15,7 @@
 				name: form.invitee.name,
 				email: form.invitee.email
 			});
+            //emails.push(form.invitee.email);
 			emails = [...emails, form.invitee.email];
 			invIds.add(form.invitee.id);
 		}

@@ -2,6 +2,7 @@
 	import { goto, preloadData, pushState } from '$app/navigation';
 	import { page } from '$app/state';
 	import AddGroupModalPage from './shared/add/+page.svelte';
+	import InviteModalPage from './shared/[id]/invite/+page.svelte';
 	import type { LayoutProps } from './$types';
 
 	let { data, children }: LayoutProps = $props();
@@ -53,5 +54,8 @@
 	{@render children()}
 	{#if page.state.selected}
 		<AddGroupModalPage data={page.state.selected} form={page.form} />
+	{/if}
+	{#if page.state.invite}
+		<InviteModalPage data={page.state.invite} form={page.form} />
 	{/if}
 </div>

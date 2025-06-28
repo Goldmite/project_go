@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import type { User } from '$lib/types/user';
 	import ModalWrapper from '../../../../components/ModalWrapper.svelte';
-	import PageSubheader from '../../../../components/PageSubheader.svelte';
 	import GroupModal from '../../../../components/shelf/shared/GroupModal.svelte';
 	import InviteForm from '../../../../components/shelf/shared/InviteForm.svelte';
 	import StepProgressBar from '../../../../components/StepProgressBar.svelte';
@@ -11,6 +11,8 @@
 	let isOpen = $state(false);
 	let step = $state(1);
 
+	const invitees: User[] = $state([]);
+    const invIds = new Set<string>();
 	const formData = $state({
 		name: '',
 		emails: [] as string[]
@@ -18,19 +20,10 @@
 </script>
 
 <ModalWrapper>
-	<GroupModal bind:isOpen bind:step startStep="1" endStep="3">
+	<GroupModal bind:isOpen bind:step startStep=1 endStep=3 name={formData.name} emails={formData.emails} >
 		<StepProgressBar currStep={step} />
-		<div class="mx-4">
-			{#if step == 1}
-				<PageSubheader>I. Name your group</PageSubheader>
-			{:else if step == 2}
-				<PageSubheader>II. Invite your friends</PageSubheader>
-			{:else}
-				<PageSubheader>III. Create shared shelf</PageSubheader>
-			{/if}
-		</div>
 		<!-- Hidden, just to catch inputs-->
-		<form id="addShared" method="POST" action="?/createShared" use:enhance>
+		<form id="shared" method="POST" action="?/createShared" use:enhance>
 			<input type="hidden" name="name" value={formData.name} />
 			{#each formData.emails as email}
 				<input type="hidden" name="emails[]" value={email} />
@@ -48,7 +41,7 @@
 					required
 				/>
 			{:else if step == 2}
-				<InviteForm {form} emails={formData.emails} required={formData.emails.length === 0} />
+				<InviteForm {form} bind:emails={formData.emails} invIds={invIds} invitees={invitees} required={formData.emails.length === 0} />
 			{:else}
 				<p>Ready to create!</p>
 			{/if}

@@ -8,6 +8,7 @@ declare global {
 		interface PageState {
 			isLoginSelected: boolean;
 			selected;
+			invite;
 		}
 		// interface Platform {}
 	}
