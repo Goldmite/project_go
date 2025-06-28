@@ -3,12 +3,11 @@ import { user } from '$lib/stores/user';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { get } from 'svelte/store';
 
-
 export const actions = {
 	createShared: async (event) => {
-		const data = (await event.request.formData());
+		const data = await event.request.formData();
 		let name = data.get('name')?.toString() ?? '';
-		if (name === '') name = 'Group'
+		if (name === '') name = 'Group';
 		const userId = get(user)?.id ?? '';
 
 		const createForm = new FormData();
@@ -60,5 +59,4 @@ export const actions = {
 		const invitee = await res.json();
 		return fail(400, { invitee, fakesuccess: true });
 	}
-	
 } satisfies Actions;

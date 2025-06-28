@@ -11,7 +11,8 @@
 		goto('/login', {
 			state: {
 				...page.state,
-				isLoginSelected: link == '/login' }
+				isLoginSelected: link == '/login'
+			}
 		})}
 	class="text-{color} bg-neutral rounded-xl font-sans font-bold shadow-md hover:shadow-lg shadow-{color} m-2 p-3"
 >
