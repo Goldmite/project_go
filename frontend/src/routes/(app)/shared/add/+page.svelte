@@ -26,7 +26,7 @@
 			{/each}
 		</form>
 
-		<div class="m-4 flex flex-1 flex-col">
+		<div class="mx-4 mt-4 flex flex-1 flex-col">
 			{#if step == 1}
 				<input
 					class="outline-status-logo-done focus:invalid:outline-logo-red focus:outline-3"
@@ -37,7 +37,7 @@
 					required
 				/>
 			{:else if step == 2}
-				<InviteForm {form} {inviteState} required={inviteState.invites.length === 0} />
+				<InviteForm {form} required={inviteState.invites.length === 0} />
 			{:else}
 				<p>Ready to create!</p>
 			{/if}

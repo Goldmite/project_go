@@ -1,23 +1,27 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
+	import { getInviteState } from '$lib/inviteState.svelte';
 	import ErrorMsg from '../../errors/ErrorMsg.svelte';
 	import InviteListBox from './InviteListBox.svelte';
 
 	const MAX_INVITES = 7;
-	let { invited = [], form, required, inviteState } = $props();
+	let { invited = [], form, required } = $props();
+	const inviteState = getInviteState();
+
 	let inviteToggle = $state(true);
-	let isDuplicate = $derived(
-		invited.find(
-			(user) => user.id === form?.invitee.id
-		) && form?.invitee.id
-	);
+	let isDuplicate = $derived.by(() => {
+		if (form?.invitee !== undefined) {
+			return invited.some((user) => user.id === form.invitee.id);
+		}
+		return false;
+	});
 	let canSubmit = $state(false);
 	let input = $state('');
 	$effect(() => {
 		if (
 			form?.fakesuccess &&
 			canSubmit &&
-			!inviteState.isExist(form.invitee.id) &&
+			!inviteState.isExist(form?.invitee.id) &&
 			inviteState.invites.length < MAX_INVITES &&
 			!isDuplicate
 		) {
@@ -72,20 +76,16 @@
 	{/if}
 </div>
 
-<div class="flex-1">
+<div class="h-43">
 	{#if inviteToggle}
-		<InviteListBox 
-			invites={inviteState.invites} 
-			inviteState={inviteState}
+		<InviteListBox
+			bind:invites={inviteState.invites}
 			header="Will invite"
-			bind:inviteToggle={inviteToggle}
+			bind:inviteToggle
 			showToggle={invited.length !== 0}
 		></InviteListBox>
 	{:else}
-		<InviteListBox 
-			invites={invited}
-			header="Already invited"
-			bind:inviteToggle={inviteToggle}
+		<InviteListBox bind:invites={invited} header="Already invited" bind:inviteToggle
 		></InviteListBox>
 	{/if}
 </div>

@@ -10,13 +10,13 @@ export const load: PageServerLoad = async ({ params }) => {
 	if (!currGroup) {
 		error(404, 'Not found');
 	}
-	const sentRes = await fetch(`http:localhost:3000/api/groups/invites/${currGroup.id}`);
+	const sentRes = await fetch(`http://localhost:3000/api/groups/invites/${currGroup.id}`);
 	if (sentRes.status != 200) {
 		return fail(sentRes.status);
 	}
 	const invitedUsers = await sentRes.json();
-	return { invitedUsers }
-}
+	return { invitedUsers };
+};
 export const actions = {
 	invite: async (event) => {
 		const emails = (await event.request.formData()).getAll('emails[]');

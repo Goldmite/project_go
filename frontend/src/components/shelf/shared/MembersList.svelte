@@ -1,8 +1,10 @@
 <script lang="ts">
+	import { getInviteState } from '$lib/inviteState.svelte';
 	import type { User } from '$lib/types/user';
 	import MemberPill from './MemberPill.svelte';
 
-	let { members, children = () => {}, inviteState = undefined } = $props();
+	let { members = $bindable(), children = () => {}, isInvites = false } = $props();
+	const inviteState = getInviteState();
 
 	function handleRemove(id: string) {
 		inviteState.remove(id);
@@ -10,11 +12,11 @@
 	}
 </script>
 
-<div class="my-4 flex flex-wrap">
+<div class="my-2 flex flex-wrap">
 	{@render children()}
 	{#each members as member (member.id)}
-		<MemberPill username={member.name} email={member.email} hasContent={inviteState != undefined}>
-			{#if inviteState}
+		<MemberPill username={member.name} email={member.email} hasContent={isInvites}>
+			{#if isInvites}
 				<button onclick={() => handleRemove(member.id)}>
 					{'\u2717'}
 				</button>

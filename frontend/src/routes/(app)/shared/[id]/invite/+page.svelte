@@ -16,12 +16,12 @@
 	<GroupModal bind:isOpen step="2" startStep="2" endStep="2" invites={inviteState.invites}>
 		<!-- Hidden, just to catch inputs-->
 		<form id="shared" method="POST" action="?/invite" use:enhance>
-			{#each inviteState.invites as email}
-				<input type="hidden" name="emails[]" value={email} />
+			{#each inviteState.invites as invite}
+				<input type="hidden" name="emails[]" value={invite.email} />
 			{/each}
 		</form>
-		<div class="m-4 flex flex-1 flex-col">
-			<InviteForm invited={data.invitedUsers} {form} {inviteState} required={inviteState.invites.length === 0} />
+		<div class="mx-4 mt-4 flex flex-1 flex-col">
+			<InviteForm invited={data.invitedUsers} {form} required={inviteState.invites.length === 0} />
 		</div>
 	</GroupModal>
 </ModalWrapper>
