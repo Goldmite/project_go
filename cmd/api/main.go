@@ -32,6 +32,7 @@ func main() {
 	api.POST("/users/signup", userHandler.CreateUserHandler) // Register
 	api.POST("/users/login", userHandler.GetUserHandler)     // Login | by email and password
 	api.GET("/users/groups/:id", userHandler.GetGroupMembersHandler)
+	api.GET("/users/invites/:id", userHandler.GetUserInvitesHandler)
 
 	api.POST("/books", bookHandler.AddNewBookForUserHandler)
 	api.GET("/books/:isbn", bookHandler.FetchByIsbnFromApiHandler)
@@ -41,7 +42,7 @@ func main() {
 	api.POST("/groups", groupHandler.CreateGroupHandler)
 	api.GET("/groups/:id", groupHandler.GetAllUserGroupsHandler)
 	api.POST("/groups/invites", groupHandler.SendInvitesHandler)
-	api.GET("/groups/invites/:id", userHandler.GetUserInvitesHandler)
+	api.GET("/groups/invites/:id", groupHandler.GetInvitesHandler)
 	api.POST("/groups/invites/accept", groupHandler.AcceptInvitationHandler)
 	api.DELETE("/groups/invites/decline", groupHandler.DeclineInvitationHandler)
 

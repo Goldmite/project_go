@@ -1,28 +1,45 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { applyAction, enhance } from '$app/forms';
 	import ErrorMsg from '../../errors/ErrorMsg.svelte';
-	import MembersList from './MembersList.svelte';
+	import InviteListBox from './InviteListBox.svelte';
 
 	const MAX_INVITES = 7;
-	let { form, emails = $bindable(), required, invitees, invIds } = $props();
-
+	let { invited = [], form, required, inviteState } = $props();
+	let inviteToggle = $state(true);
+	let isDuplicate = $derived(
+		invited.find(
+			(user) => user.id === form?.invitee.id
+		) && form?.invitee.id
+	);
+	let canSubmit = $state(false);
 	let input = $state('');
 	$effect(() => {
-		if (form?.fakesuccess && !invIds.has(form.invitee.id) && invitees.length < MAX_INVITES) {
+		if (
+			form?.fakesuccess &&
+			canSubmit &&
+			!inviteState.isExist(form.invitee.id) &&
+			inviteState.invites.length < MAX_INVITES &&
+			!isDuplicate
+		) {
 			input = '';
-			invitees.push({
-				id: form.invitee.id,
-				name: form.invitee.name,
-				email: form.invitee.email
-			});
-            //emails.push(form.invitee.email);
-			emails = [...emails, form.invitee.email];
-			invIds.add(form.invitee.id);
+			inviteState.add(form.invitee.id, form.invitee.name, form.invitee.email);
+			canSubmit = false;
 		}
 	});
 </script>
 
-<form method="POST" action="?/checkUser" use:enhance>
+<form
+	method="POST"
+	action="?/checkUser"
+	use:enhance={() => {
+		return async ({ result }) => {
+			if (result.type === 'failure') {
+				canSubmit = true;
+			}
+			await applyAction(result);
+		};
+	}}
+>
 	<div class="flex w-full flex-row">
 		<input
 			class="outline-status-logo-done focus:invalid:outline-logo-red w-4/5 focus:outline-3"
@@ -44,19 +61,31 @@
 	{#if form?.notfound}
 		<ErrorMsg msg="I. User not found."></ErrorMsg>
 	{/if}
-	{#if form?.duplicate}
-		<ErrorMsg msg="II. No need to invite yourself."></ErrorMsg>
+	{#if isDuplicate}
+		<ErrorMsg msg="II. Already invited."></ErrorMsg>
 	{/if}
-	{#if invitees.length === MAX_INVITES && input != ''}
-		<ErrorMsg msg="III. Max invites reached."></ErrorMsg>
+	{#if form?.yourself}
+		<ErrorMsg msg="III. No need to invite yourself."></ErrorMsg>
+	{/if}
+	{#if inviteState.invites.length === MAX_INVITES && input != ''}
+		<ErrorMsg msg="IV. Max invites reached."></ErrorMsg>
 	{/if}
 </div>
 
-<div
-	class="inset-shadow-md dots flex-1 rounded-2xl border backdrop-brightness-95
-    {invitees.length !== 0 && 'alternate'}"
->
-	{#if invitees.length !== 0}
-		<MembersList members={invitees}></MembersList>
+<div class="flex-1">
+	{#if inviteToggle}
+		<InviteListBox 
+			invites={inviteState.invites} 
+			inviteState={inviteState}
+			header="Will invite"
+			bind:inviteToggle={inviteToggle}
+			showToggle={invited.length !== 0}
+		></InviteListBox>
+	{:else}
+		<InviteListBox 
+			invites={invited}
+			header="Already invited"
+			bind:inviteToggle={inviteToggle}
+		></InviteListBox>
 	{/if}
 </div>

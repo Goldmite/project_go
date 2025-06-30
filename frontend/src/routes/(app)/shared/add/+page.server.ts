@@ -1,4 +1,4 @@
-import { checkUser } from '$lib/server/checkUser';
+import { checkUser } from '$lib/server/inviteValidity';
 import { user } from '$lib/stores/user';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { get } from 'svelte/store';

@@ -3,9 +3,11 @@ package services
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/Goldmite/project_go/internal/models"
+	"github.com/Goldmite/project_go/internal/models/dto"
 )
 
 type GroupService struct {
@@ -57,10 +59,35 @@ func (groupService *GroupService) CreateInvite(inv models.Invitation) error {
 	query := "INSERT INTO invitations (email_to, group_id, invited_by, status, sent_at, expires_at) VALUES (?, ?, ?, ?, ?, ?)"
 	_, err := groupService.database.Exec(query, inv.EmailTo, inv.GroupId, inv.InvitedBy, inv.Status, inv.SentAt, inv.ExpiresAt)
 	if err != nil {
+		if strings.Contains(err.Error(), "UNIQUE constraint failed") {
+			return nil
+		}
 		return fmt.Errorf("failed to create invite for %s %w", inv.EmailTo, err)
 	}
 
 	return nil
+}
+
+func (groupService *GroupService) GetInvites(groupId string) ([]dto.GetUserResponse, error) {
+	query := "SELECT id, name, email FROM users JOIN invitations ON email = email_to WHERE group_id = ? ORDER BY sent_at ASC"
+	rows, err := groupService.database.Query(query, groupId)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get invites to group %w", err)
+	}
+	defer rows.Close()
+
+	var invitedUsers []dto.GetUserResponse
+	for rows.Next() {
+		var user dto.GetUserResponse
+		err := rows.Scan(&user.ID, &user.Name, &user.Email)
+		if err != nil {
+			return nil, err
+		}
+
+		invitedUsers = append(invitedUsers, user)
+	}
+
+	return invitedUsers, nil
 }
 
 func (groupService *GroupService) JoinGroup(userId, groupId string) error {

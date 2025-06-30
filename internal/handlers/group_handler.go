@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"net/http"
-	"strings"
 
 	"github.com/Goldmite/project_go/internal/models"
 	"github.com/Goldmite/project_go/internal/models/dto"
@@ -55,16 +54,23 @@ func (groupHandler *GroupHandler) SendInvitesHandler(c *gin.Context) {
 		invite := models.NewInvitationFromRequest(req, nr)
 		err := groupHandler.groupService.CreateInvite(*invite)
 		if err != nil {
-			if strings.Contains(err.Error(), "UNIQUE constraint failed") {
-				c.JSON(http.StatusConflict, gin.H{"error": "Duplicate invite: " + err.Error()})
-				return
-			}
-			c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 	}
 
 	c.JSON(http.StatusOK, req)
+}
+
+func (groupHandler *GroupHandler) GetInvitesHandler(c *gin.Context) {
+	groupId := c.Param("id")
+	invitedUsers, err := groupHandler.groupService.GetInvites(groupId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, invitedUsers)
 }
 
 func (groupHandler *GroupHandler) AcceptInvitationHandler(c *gin.Context) {

@@ -11,16 +11,17 @@
 
 <PageHeader>{data.currGroup?.name} shelf</PageHeader>
 <MembersList members={data.members}>
-	<button class="border p-2" 
-			onclick={async () => {
-				const result = await preloadData(`/shared/${data.currGroup.id}/invite`);
-				if (result.type === 'loaded' && result.status === 200) {
-					pushState(`/shared/${data.currGroup.id}/invite`, {
-						...page.state,
-						invite: result.data
-					});
-				}
-			}}
-	>Invite</button>
+	<button
+		class="border p-2"
+		onclick={async () => {
+			const result = await preloadData(`/shared/${data.currGroup.id}/invite`);
+			if (result.type === 'loaded' && result.status === 200) {
+				pushState(`/shared/${data.currGroup.id}/invite`, {
+					...page.state,
+					invite: result.data
+				});
+			}
+		}}>Invite</button
+	>
 </MembersList>
 <BookGrid books={data.books} />

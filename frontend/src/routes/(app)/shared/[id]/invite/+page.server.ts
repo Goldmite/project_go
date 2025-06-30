@@ -1,16 +1,30 @@
-import { checkUser } from '$lib/server/checkUser';
+import { checkUser } from '$lib/server/inviteValidity';
 import { user } from '$lib/stores/user';
-import { fail, type Actions } from '@sveltejs/kit';
+import { error, fail, type Actions } from '@sveltejs/kit';
 import { get } from 'svelte/store';
+import type { PageServerLoad } from './$types';
+import { groups } from '$lib/stores/group';
 
+export const load: PageServerLoad = async ({ params }) => {
+	const currGroup = get(groups).find((g) => g.id === params.id);
+	if (!currGroup) {
+		error(404, 'Not found');
+	}
+	const sentRes = await fetch(`http:localhost:3000/api/groups/invites/${currGroup.id}`);
+	if (sentRes.status != 200) {
+		return fail(sentRes.status);
+	}
+	const invitedUsers = await sentRes.json();
+	return { invitedUsers }
+}
 export const actions = {
-    invite: async (event) => {
-        const emails = (await event.request.formData()).getAll('emails[]');
-        if (!emails) return fail(404);
+	invite: async (event) => {
+		const emails = (await event.request.formData()).getAll('emails[]');
+		if (!emails) return fail(404);
 		const userId = get(user)?.id ?? '';
-        const groupId = event.params.id ?? '';
+		const groupId = event.params.id ?? '';
 
-        const inviteForm = new FormData();
+		const inviteForm = new FormData();
 		emails.forEach((email) => {
 			inviteForm.append('email_to', email);
 		});
@@ -24,10 +38,10 @@ export const actions = {
 			return fail(inviteRes.status);
 		}
 
-        return { success: true };
-    },
-    checkUser: async (event) => {
-        const email = (await event.request.formData()).get('email') ?? '';
-        return checkUser(email);
-    }
+		return { success: true };
+	},
+	checkUser: async (event) => {
+		const email = (await event.request.formData()).get('email') ?? '';
+		return checkUser(email);
+	}
 } satisfies Actions;
