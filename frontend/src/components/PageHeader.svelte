@@ -2,6 +2,6 @@
 	let { children } = $props();
 </script>
 
-<h1 class="py-4 text-4xl font-bold hyphens-auto wrap-anywhere">
+<h1 class="py-4 text-4xl font-bold wrap-anywhere hyphens-auto">
 	{@render children()}
 </h1>

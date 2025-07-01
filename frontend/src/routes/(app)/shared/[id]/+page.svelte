@@ -9,19 +9,22 @@
 	let { data }: PageProps = $props();
 </script>
 
-<span class="flex flex-col md:flex-row justify-between items-baseline">
+<span class="flex flex-col items-baseline justify-between md:flex-row">
 	<PageHeader>{data.currGroup?.name} shelf</PageHeader>
-	<button class="rounded-2xl min-w-28 h-12 text-dark text-4xl font-light hover:font-normal 
-	active:font-normal italic bg-logo-blue hover:outline hover:shadow-logo-blue shadow-lg"
-	onclick={async () => {
-		const result = await preloadData(`/shared/${data.currGroup.id}/invite`);
-		if (result.type === 'loaded' && result.status === 200) {
-			pushState(`/shared/${data.currGroup.id}/invite`, {
-				...page.state,
-				invite: result.data,
-				groupMembers: data.members
-			}); } }}
-	>+</button>
+	<button
+		class="text-dark bg-logo-blue hover:shadow-logo-blue h-12 min-w-28 rounded-2xl text-4xl
+	font-light italic shadow-lg hover:font-normal hover:outline active:font-normal"
+		onclick={async () => {
+			const result = await preloadData(`/shared/${data.currGroup.id}/invite`);
+			if (result.type === 'loaded' && result.status === 200) {
+				pushState(`/shared/${data.currGroup.id}/invite`, {
+					...page.state,
+					invite: result.data,
+					groupMembers: data.members
+				});
+			}
+		}}>+</button
+	>
 </span>
 <MembersList members={data.members} />
 <BookGrid books={data.books} />

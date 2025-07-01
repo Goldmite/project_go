@@ -1,3 +1,4 @@
+import { PUBLIC_API_URL } from '$env/static/public';
 import { checkUser } from '$lib/server/inviteValidity';
 import { user } from '$lib/stores/user';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
@@ -14,7 +15,7 @@ export const actions = {
 		createForm.append('id', userId);
 		createForm.append('name', name);
 
-		const createRes = await fetch('http://localhost:3000/api/groups', {
+		const createRes = await fetch(`${PUBLIC_API_URL}/groups`, {
 			method: 'POST',
 			body: createForm
 		});
@@ -30,7 +31,7 @@ export const actions = {
 		});
 		inviteForm.append('group_id', groupId);
 		inviteForm.append('invited_by', userId);
-		const inviteRes = await fetch('http://localhost:3000/api/groups/invites', {
+		const inviteRes = await fetch(`${PUBLIC_API_URL}/groups/invites`, {
 			method: 'POST',
 			body: inviteForm
 		});

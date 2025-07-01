@@ -11,11 +11,12 @@
 	let inviteToggle = $state(true);
 	let [isDuplicate, isMember] = $derived.by((): [boolean, boolean] => {
 		if (form?.invitee !== undefined) {
-			return [ 
-				invited.some((user) => user.id === form.invitee.id), 
-				members.some((m) => m.id === form.invitee.id) ];
+			return [
+				invited.some((user) => user.id === form.invitee.id),
+				members.some((m) => m.id === form.invitee.id)
+			];
 		}
-		return [ false, false ];
+		return [false, false];
 	});
 	let canSubmit = $state(false);
 	let input = $state('');
@@ -25,7 +26,8 @@
 			canSubmit &&
 			!inviteState.isExist(form?.invitee.id) &&
 			inviteState.invites.length < MAX_INVITES &&
-			!isDuplicate && !isMember
+			!isDuplicate &&
+			!isMember
 		) {
 			input = '';
 			inviteState.add(form.invitee.id, form.invitee.name, form.invitee.email);

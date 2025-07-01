@@ -2,10 +2,11 @@ import type { PageServerLoad } from './$types';
 import { user } from '$lib/stores/user';
 import { get } from 'svelte/store';
 import { fail, type Actions } from '@sveltejs/kit';
+import { PUBLIC_API_URL } from '$env/static/public';
 
 export const load: PageServerLoad = async () => {
 	const currUser = get(user);
-	const res = await fetch(`http://localhost:3000/api/books/user/${currUser?.id}`);
+	const res = await fetch(`${PUBLIC_API_URL}/books/user/${currUser?.id}`);
 	const books = await res.json();
 	return { books };
 };
@@ -24,7 +25,7 @@ export const actions = {
 			userId: userId,
 			isbn: isbn
 		});
-		const res = await fetch('http://localhost:3000/api/books', {
+		const res = await fetch(`${PUBLIC_API_URL}/books`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: data
