@@ -3,7 +3,7 @@
 	import type { User } from '$lib/types/user';
 	import MemberPill from './MemberPill.svelte';
 
-	let { members = $bindable(), children = () => {}, isInvites = false } = $props();
+	let { members = $bindable(), isInvites = false } = $props();
 	const inviteState = getInviteState();
 
 	function handleRemove(id: string) {
@@ -13,7 +13,6 @@
 </script>
 
 <div class="my-2 flex flex-wrap">
-	{@render children()}
 	{#each members as member (member.id)}
 		<MemberPill username={member.name} email={member.email} hasContent={isInvites}>
 			{#if isInvites}

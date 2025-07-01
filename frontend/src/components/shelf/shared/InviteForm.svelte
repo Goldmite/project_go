@@ -5,15 +5,17 @@
 	import InviteListBox from './InviteListBox.svelte';
 
 	const MAX_INVITES = 7;
-	let { invited = [], form, required } = $props();
+	let { invited = [], members = [], form, required } = $props();
 	const inviteState = getInviteState();
 
 	let inviteToggle = $state(true);
-	let isDuplicate = $derived.by(() => {
+	let [isDuplicate, isMember] = $derived.by((): [boolean, boolean] => {
 		if (form?.invitee !== undefined) {
-			return invited.some((user) => user.id === form.invitee.id);
+			return [ 
+				invited.some((user) => user.id === form.invitee.id), 
+				members.some((m) => m.id === form.invitee.id) ];
 		}
-		return false;
+		return [ false, false ];
 	});
 	let canSubmit = $state(false);
 	let input = $state('');
@@ -23,7 +25,7 @@
 			canSubmit &&
 			!inviteState.isExist(form?.invitee.id) &&
 			inviteState.invites.length < MAX_INVITES &&
-			!isDuplicate
+			!isDuplicate && !isMember
 		) {
 			input = '';
 			inviteState.add(form.invitee.id, form.invitee.name, form.invitee.email);
@@ -71,8 +73,11 @@
 	{#if form?.yourself}
 		<ErrorMsg msg="III. No need to invite yourself."></ErrorMsg>
 	{/if}
+	{#if isMember}
+		<ErrorMsg msg="IV. Already a member."></ErrorMsg>
+	{/if}
 	{#if inviteState.invites.length === MAX_INVITES && input != ''}
-		<ErrorMsg msg="IV. Max invites reached."></ErrorMsg>
+		<ErrorMsg msg="V. Max invites reached."></ErrorMsg>
 	{/if}
 </div>
 

@@ -9,6 +9,7 @@ declare global {
 			isLoginSelected: boolean;
 			selected;
 			invite;
+			groupMembers: User[];
 		}
 		// interface Platform {}
 	}

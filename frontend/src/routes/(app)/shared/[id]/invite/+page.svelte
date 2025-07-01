@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { page } from '$app/state';
 	import { getInviteState, setInviteState } from '$lib/inviteState.svelte';
 	import ModalWrapper from '../../../../../components/ModalWrapper.svelte';
 	import GroupModal from '../../../../../components/shelf/shared/GroupModal.svelte';
@@ -21,7 +22,7 @@
 			{/each}
 		</form>
 		<div class="mx-4 mt-4 flex flex-1 flex-col">
-			<InviteForm invited={data.invitedUsers} {form} required={inviteState.invites.length === 0} />
+			<InviteForm invited={data.invitedUsers} members={page.state.groupMembers} {form} required={inviteState.invites.length === 0} />
 		</div>
 	</GroupModal>
 </ModalWrapper>
