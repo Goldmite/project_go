@@ -7,7 +7,10 @@ declare global {
 		// interface PageData {}
 		interface PageState {
 			isLoginSelected: boolean;
+			invitations;
 			selected;
+			invite;
+			groupMembers: User[];
 		}
 		// interface Platform {}
 	}

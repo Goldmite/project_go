@@ -1,21 +1,21 @@
-import { groups } from '$lib/stores/group';
+import { PUBLIC_API_URL } from '$env/static/public';
+import { checkUser } from '$lib/server/inviteValidity';
 import { user } from '$lib/stores/user';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { get } from 'svelte/store';
 
-
 export const actions = {
 	createShared: async (event) => {
-		const data = (await event.request.formData());
+		const data = await event.request.formData();
 		let name = data.get('name')?.toString() ?? '';
-		if (name === '') name = 'Group'
+		if (name === '') name = 'Group';
 		const userId = get(user)?.id ?? '';
 
 		const createForm = new FormData();
 		createForm.append('id', userId);
 		createForm.append('name', name);
 
-		const createRes = await fetch('http://localhost:3000/api/groups', {
+		const createRes = await fetch(`${PUBLIC_API_URL}/groups`, {
 			method: 'POST',
 			body: createForm
 		});
@@ -31,7 +31,7 @@ export const actions = {
 		});
 		inviteForm.append('group_id', groupId);
 		inviteForm.append('invited_by', userId);
-		const inviteRes = await fetch('http://localhost:3000/api/groups/invites', {
+		const inviteRes = await fetch(`${PUBLIC_API_URL}/groups/invites`, {
 			method: 'POST',
 			body: inviteForm
 		});
@@ -43,22 +43,6 @@ export const actions = {
 	},
 	checkUser: async (event) => {
 		const email = (await event.request.formData()).get('email') ?? '';
-		if (email === '') return fail(400);
-		const currUserEmail = get(user)?.email;
-		if (currUserEmail == email) {
-			return fail(409, { email, duplicate: true });
-		}
-
-		const res = await fetch(`http://localhost:3000/api/users/${email}`);
-
-		if (res.status == 404) {
-			return fail(404, { email, notfound: true });
-		}
-		if (res.status != 200) {
-			return fail(res.status);
-		}
-		const invitee = await res.json();
-		return fail(400, { invitee, fakesuccess: true });
+		return checkUser(email);
 	}
-	
 } satisfies Actions;

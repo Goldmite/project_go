@@ -1,0 +1,18 @@
+<script lang="ts">
+	import InvitationRow from '../../../../components/dashboard/invitations/InvitationRow.svelte';
+	import type { PageProps } from './$types';
+
+	let { data }: PageProps = $props();
+</script>
+
+<table class="h-full w-full table-auto font-sans">
+	<tbody>
+		{#each data.invitations as inv, i}
+			<InvitationRow {inv} row={i + 1} />
+		{:else}
+			<tr>
+				<td class="text-center h-10 text-lg italic tracking-wider"> No invitations </td>
+			</tr>
+		{/each}
+	</tbody>
+</table>

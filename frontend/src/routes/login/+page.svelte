@@ -5,6 +5,7 @@
 	import { Tween } from 'svelte/motion';
 	import { zxcvbn } from '@zxcvbn-ts/core';
 	import { cubicOut } from 'svelte/easing';
+	import EyeToggle from '../../components/EyeToggle.svelte';
 
 	let isLoginSelected = $derived(page.state.isLoginSelected);
 	function toggleActive() {
@@ -75,15 +76,7 @@
 					required
 					bind:this={inputStrength}
 				/>
-				<!-- svelte-ignore a11y_no_static_element_interactions -->
-				<!-- svelte-ignore a11y_click_events_have_key_events -->
-				<span
-					class="{showPassword
-						? 'icon-[solar--eye-closed-linear]'
-						: 'icon-[solar--eye-linear]'} -ml-8 text-xl"
-					onclick={() => (showPassword = !showPassword)}
-				>
-				</span>
+				<EyeToggle bind:toggle={showPassword} />
 			</div>
 		</div>
 		{#if !isLoginSelected}

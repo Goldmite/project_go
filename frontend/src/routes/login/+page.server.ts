@@ -1,11 +1,12 @@
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { user } from '$lib/stores/user';
+import { PUBLIC_API_URL } from '$env/static/public';
 
 export const actions = {
 	login: async (event) => {
 		const data = await event.request.formData();
 
-		const res = await fetch('http://localhost:3000/api/users/login', {
+		const res = await fetch(`${PUBLIC_API_URL}/users/login`, {
 			method: 'POST',
 			body: data
 		});
@@ -21,7 +22,7 @@ export const actions = {
 	signup: async (event) => {
 		const data = await event.request.formData();
 
-		const res = await fetch('http://localhost:3000/api/users/signup', {
+		const res = await fetch(`${PUBLIC_API_URL}/users/signup`, {
 			method: 'POST',
 			body: data
 		});
