@@ -1,17 +1,24 @@
 <script lang="ts">
-    let { toAccept, action = $bindable('') } = $props();
+	let { toAccept, action = $bindable('') } = $props();
 </script>
 
-<button class="active:inset-shadow-md w-10 sm:w-14 rounded-2xl p-1 text-lg text-dark hover:outline-1 focus:outline-1 active:text-base {toAccept
-    ? `bg-status-logo-done  ${action === '' ? '' : action === 'accept' ? 'disabled' : 'invisible'}`
-    : `bg-logo-red ${action === '' ? '' : action === 'decline' ? 'disabled' : 'invisible'}`}"
-    type="submit"
-    onclick={() => {toAccept ? action = 'accept' : action = 'decline'}}
-    formaction={toAccept ? '?/accept' : '?/decline'}
+<button
+	class="active:inset-shadow-md size-8 rounded-full font-bold inset-shadow-sm 
+    outline hover:outline-2 focus:outline-2 active:text-sm disabled:pointer-events-none 
+    {toAccept ? 
+        `text-status-logo-done inset-shadow-status-logo-done ${action === 'decline' && 'invisible'}` :
+		`text-logo-red inset-shadow-logo-red ${action === 'accept' && 'invisible'}`}"
+	type={'submit'}
+	disabled={action === 'decline'}
+	formaction={toAccept ? '?/accept' : '?/decline'}
 >
-{#if toAccept}
-    {'\u2713'}
-{:else}
-    {'\u2717'}
-{/if}
+	{#if toAccept}
+		{#if action === 'accept'}
+			{'->'}
+		{:else}
+			{'\u2713'}
+		{/if}
+	{:else}
+		{'\u2717'}
+	{/if}
 </button>
