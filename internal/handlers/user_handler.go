@@ -24,11 +24,13 @@ func (userHandler *UserHandler) CreateUserHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	if request.Name == "" {
-		request.Name = strings.Split(request.Email, "@")[0]
-	}
+
 	id, err := userHandler.userService.CreateUser(request)
 	if err != nil {
+		if strings.Contains(err.Error(), "UNIQUE constraint failed") {
+			c.JSON(http.StatusConflict, gin.H{"error": "Email already exists: " + err.Error()})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

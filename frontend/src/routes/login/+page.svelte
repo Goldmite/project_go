@@ -6,11 +6,19 @@
 	import { zxcvbn } from '@zxcvbn-ts/core';
 	import { cubicOut } from 'svelte/easing';
 	import EyeToggle from '../../components/EyeToggle.svelte';
+	import type { PageProps } from './$types';
+	import ErrorMsg from '../../components/errors/ErrorMsg.svelte';
 
+	let { form }: PageProps = $props();
 	let isLoginSelected = $derived(page.state.isLoginSelected);
 	function toggleActive() {
 		isLoginSelected = !isLoginSelected;
 	}
+	$effect(() => {
+		if (form?.success) { // switch to login form after sign up form success
+			isLoginSelected = true;
+		}
+	});
 	let showPassword = $state(false);
 	let password = $state('');
 	let email = $state('');
@@ -40,10 +48,12 @@
 	<div>
 		<label for="name" class="block p-2">Username </label>
 		<input
-			class="outline-status-logo-done focus:outline-3"
+			class="outline-status-logo-done focus:invalid:outline-logo-red focus:outline-3"
 			name="name"
 			type="text"
-			maxlength="32"
+			minlength="2"
+			maxlength="20"
+			required
 		/>
 	</div>
 {/snippet}
@@ -56,7 +66,7 @@
 			bind:value={email}
 			name="email"
 			type="email"
-			maxlength="256"
+			maxlength="254"
 			required
 		/>
 	</div>
@@ -100,9 +110,20 @@
 		{toggleActive}
 		{emailField}
 		{passwordField}
-		usernameField={nameField}
-	/>
-	<LoginForm {isLoginSelected} {toggleActive} {emailField} {passwordField} />
+		usernameField={nameField} >
+		{#if form?.emailtaken}
+		<div class="absolute top-0 w-full text-center">
+			<ErrorMsg msg="| EMAIL TAKEN |" />
+		</div>
+		{/if}
+	</SignUpForm>
+	<LoginForm {isLoginSelected} {toggleActive} {emailField} {passwordField} >
+		{#if form?.notfound}
+		<div class="absolute top-0 w-full text-center">
+			<ErrorMsg msg="| INCORRECT CREDENTIALS |" />
+		</div>
+		{/if}
+	</LoginForm>
 </div>
 
 <style>

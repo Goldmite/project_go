@@ -2,8 +2,14 @@
 	import '../app.css';
 	import logo from '$lib/assets/SHELF_LOGO_2.svg';
 	import DarkToggle from '../components/DarkToggle.svelte';
+	import UserMenu from '../components/UserMenu.svelte';
+	import { user } from '$lib/stores/user';
 
-	let { children } = $props();
+	let { children, data } = $props();
+	$effect(() => {
+		user.set(data.user);
+	});
+	let toggleUserMenu = $state(false);
 </script>
 
 <svelte:head>
@@ -20,6 +26,21 @@
 		<img class="h-10 w-auto" src={logo} alt="Logo" />
 		<h1 class="text-3xl font-bold">Shelf</h1>
 	</div>
-	<DarkToggle></DarkToggle>
+	<div>
+	{#if $user }
+		<button
+		type="button"
+		aria-label="User menu"
+		class="rounded-full p-2 text-2xl"
+		onclick={() => toggleUserMenu = !toggleUserMenu}>
+		<span class="icon-[solar--user-circle-bold]"></span>
+		</button>
+		{#if toggleUserMenu}
+			<UserMenu userInfo={$user} />
+		{/if}
+	{/if}
+		<DarkToggle></DarkToggle>
+	</div>
 </nav>
 {@render children()}
+

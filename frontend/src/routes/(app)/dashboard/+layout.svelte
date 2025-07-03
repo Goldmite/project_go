@@ -1,36 +1,20 @@
 <script lang="ts">
-	import { preloadData, replaceState } from '$app/navigation';
-	import { page } from '$app/state';
-	import { onMount } from 'svelte';
+	import { getUserState } from '$lib/userState.svelte';
 	import CurrentlyReading from '../../../components/dashboard/CurrentlyReading.svelte';
-	import InvitationsPage from './invitations/+page.svelte';
+	import UserGreet from '../../../components/dashboard/UserGreet.svelte';
 
-	onMount(async () => {
-		const result = await preloadData('/dashboard/invitations');
-		if (result.type === 'loaded' && result.status === 200) {
-			replaceState('/dashboard/invitations', {
-				...page.state,
-				invitations: result.data
-			});
-		}
-	});
+	let { children } = $props();
+	const loggedInUser = getUserState().user;
 </script>
 
 {#snippet header(title: string)}
 	<h1 class="text-lg font-bold sm:text-2xl">{title}</h1>
 {/snippet}
 
-<div class="flex justify-between">
-	<div class="flex-1">
-		{@render header('Shelves')}
-	</div>
-	{#if page.state.invitations}
-		<div class="h-fit overflow-hidden rounded-2xl outline">
-			<div class="-mr-0.5 h-fit max-h-50 min-h-10 w-[336px] overflow-y-scroll">
-				<InvitationsPage data={page.state.invitations} form={null} />
-			</div>
-		</div>
-	{/if}
+<div class="flex flex-col gap-4">
+	<UserGreet {loggedInUser} />
+	{@render children()}
+	
 	<CurrentlyReading>{@render header('Currently Reading')}</CurrentlyReading>
 </div>
 
