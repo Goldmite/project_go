@@ -1,6 +1,6 @@
 import { checkUser } from '$lib/server/inviteValidity';
 import { user } from '$lib/stores/user';
-import { error, fail, type Actions } from '@sveltejs/kit';
+import { error, fail, redirect, type Actions } from '@sveltejs/kit';
 import { get } from 'svelte/store';
 import type { PageServerLoad } from './$types';
 import { groups } from '$lib/stores/group';
@@ -39,8 +39,7 @@ export const actions = {
 		if (inviteRes.status != 200) {
 			return fail(inviteRes.status);
 		}
-
-		return { success: true };
+		redirect(303, `/shared/${groupId}`);
 	},
 	checkUser: async (event) => {
 		const email = (await event.request.formData()).get('email') ?? '';

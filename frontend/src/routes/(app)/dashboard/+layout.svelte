@@ -14,7 +14,7 @@
 <div class="flex flex-col gap-4">
 	<UserGreet {loggedInUser} />
 	{@render children()}
-	
+
 	<CurrentlyReading>{@render header('Currently Reading')}</CurrentlyReading>
 </div>
 

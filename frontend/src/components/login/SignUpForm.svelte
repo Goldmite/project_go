@@ -2,12 +2,24 @@
 	import LoginCard from './LoginCard.svelte';
 	import { enhance } from '$app/forms';
 
-	let { children = () => {}, isSignUpSelected, toggleActive, emailField, passwordField, usernameField } = $props();
+	let {
+		children = () => {},
+		isSignUpSelected,
+		toggleActive,
+		emailField,
+		passwordField,
+		usernameField
+	} = $props();
 </script>
 
 <LoginCard shadowColorClass="signup" isActive={isSignUpSelected} handleClick={toggleActive}>
 	{#if isSignUpSelected}
-		<form method="POST" use:enhance action="?/signup" class="relative flex h-full flex-col space-y-6">
+		<form
+			method="POST"
+			use:enhance
+			action="?/signup"
+			class="relative flex h-full flex-col space-y-6"
+		>
 			{@render children()}
 			{@render usernameField()}
 			{@render emailField()}

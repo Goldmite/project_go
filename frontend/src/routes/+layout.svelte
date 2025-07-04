@@ -33,20 +33,24 @@
 	</div>
 	<div>
 		<DarkToggle></DarkToggle>
-	{#if $user }
-		<button
-		type="button"
-		aria-label="User menu"
-		class="rounded-full p-2 text-2xl"
-		onclick={() => toggleUserMenu = !toggleUserMenu}>
-		<span class="icon-[solar--user-circle-bold]"></span>
-		</button>
-		{#if toggleUserMenu}
-		<div class="fixed inset-0 z-10" aria-hidden="true" onclick={() => toggleUserMenu = false} ></div>
-		<UserMenu userInfo={$user} />
+		{#if $user}
+			<button
+				type="button"
+				aria-label="User menu"
+				class="rounded-full p-2 text-2xl"
+				onclick={() => (toggleUserMenu = !toggleUserMenu)}
+			>
+				<span class="icon-[solar--user-circle-bold]"></span>
+			</button>
+			{#if toggleUserMenu}
+				<div
+					class="fixed inset-0 z-10"
+					aria-hidden="true"
+					onclick={() => (toggleUserMenu = false)}
+				></div>
+				<UserMenu userInfo={$user} />
+			{/if}
 		{/if}
-	{/if}
 	</div>
 </nav>
 {@render children()}
-

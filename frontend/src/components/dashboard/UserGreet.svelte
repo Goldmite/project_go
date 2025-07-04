@@ -1,12 +1,11 @@
 <script lang="ts">
-
-    let { loggedInUser } = $props();
+	let { loggedInUser } = $props();
 </script>
 
-<div class="text-xl font-serif tracking-wide italic my-4">
-    {#if loggedInUser}
-        Hello, {loggedInUser.name}!
-    {:else}
-        Loading...
-    {/if}
+<div class="my-4 font-serif text-xl tracking-wide italic">
+	{#if loggedInUser}
+		Hello, {loggedInUser.name}!
+	{:else}
+		Loading...
+	{/if}
 </div>

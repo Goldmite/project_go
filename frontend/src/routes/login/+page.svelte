@@ -15,7 +15,8 @@
 		isLoginSelected = !isLoginSelected;
 	}
 	$effect(() => {
-		if (form?.success) { // switch to login form after sign up form success
+		if (form?.success) {
+			// switch to login form after sign up form success
 			isLoginSelected = true;
 		}
 	});
@@ -110,18 +111,19 @@
 		{toggleActive}
 		{emailField}
 		{passwordField}
-		usernameField={nameField} >
+		usernameField={nameField}
+	>
 		{#if form?.emailtaken}
-		<div class="absolute top-0 w-full text-center">
-			<ErrorMsg msg="| EMAIL TAKEN |" />
-		</div>
+			<div class="absolute top-0 w-full text-center">
+				<ErrorMsg msg="| EMAIL TAKEN |" />
+			</div>
 		{/if}
 	</SignUpForm>
-	<LoginForm {isLoginSelected} {toggleActive} {emailField} {passwordField} >
+	<LoginForm {isLoginSelected} {toggleActive} {emailField} {passwordField}>
 		{#if form?.notfound}
-		<div class="absolute top-0 w-full text-center">
-			<ErrorMsg msg="| INCORRECT CREDENTIALS |" />
-		</div>
+			<div class="absolute top-0 w-full text-center">
+				<ErrorMsg msg="| INCORRECT CREDENTIALS |" />
+			</div>
 		{/if}
 	</LoginForm>
 </div>
