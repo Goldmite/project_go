@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
 	import type { User } from "$lib/types/user";
-	import { fly, slide } from "svelte/transition";
+	import { slide } from "svelte/transition";
 
     let { userInfo }: {userInfo: User } = $props();
     const [ local, domain ] = userInfo.email.split('@', 2);

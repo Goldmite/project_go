@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { getInviteState, setInviteState } from '$lib/inviteState.svelte';
+	import { fly } from 'svelte/transition';
 	import ModalWrapper from '../../../../components/ModalWrapper.svelte';
 	import GroupModal from '../../../../components/shelf/shared/GroupModal.svelte';
 	import InviteForm from '../../../../components/shelf/shared/InviteForm.svelte';
@@ -13,10 +14,11 @@
 	setInviteState();
 	const inviteState = getInviteState();
 	let name = $state('');
+	let middleTransitionDirection = $state(1); //1 forward, -1 backward
 </script>
 
 <ModalWrapper>
-	<GroupModal bind:isOpen bind:step startStep="1" endStep="3" {name} invites={inviteState.invites}>
+	<GroupModal bind:isOpen bind:step startStep="1" endStep="3" {name} invites={inviteState.invites} bind:direction={middleTransitionDirection}>
 		<StepProgressBar currStep={step} />
 		<!-- Hidden, just to catch inputs-->
 		<form id="shared" method="POST" action="?/createShared" use:enhance>
@@ -29,7 +31,9 @@
 		<div class="mx-4 mt-4 flex flex-1 flex-col">
 			{#if step == 1}
 				<input
-					class="outline-status-logo-done focus:invalid:outline-logo-red focus:outline-3"
+					class="outline-status-logo-done focus:invalid:outline-logo-red focus:outline-3" 
+					in:fly={{ delay: 150, duration: 150, x: -300 }} 
+					out:fly={{ delay: 0, duration: 150, x: -300 }}
 					bind:value={name}
 					type="text"
 					placeholder="Be creative..."
@@ -37,9 +41,16 @@
 					required
 				/>
 			{:else if step == 2}
-				<InviteForm {form} required={inviteState.invites.length === 0} />
+			<div 
+				in:fly={{ delay: 150, duration: 150, x: 300 * middleTransitionDirection }} 
+				out:fly={{ delay: 0, duration: 150, x: -300 * middleTransitionDirection }}>
+				<InviteForm {form} required={inviteState.invites.length === 0} /></div>
 			{:else}
+			<div
+				in:fly={{ delay: 150, duration: 150, x: 300 }} 
+				out:fly={{ delay: 0, duration: 150, x: 300 }}>
 				<p>Ready to create!</p>
+			</div>
 			{/if}
 		</div>
 	</GroupModal>
