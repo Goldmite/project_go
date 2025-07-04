@@ -10,6 +10,11 @@
 		user.set(data.user);
 	});
 	let toggleUserMenu = $state(false);
+	$effect(() => {
+		if ($user === null) {
+			toggleUserMenu = false;
+		}
+	});
 </script>
 
 <svelte:head>
@@ -27,6 +32,7 @@
 		<h1 class="text-3xl font-bold">Shelf</h1>
 	</div>
 	<div>
+		<DarkToggle></DarkToggle>
 	{#if $user }
 		<button
 		type="button"
@@ -36,10 +42,10 @@
 		<span class="icon-[solar--user-circle-bold]"></span>
 		</button>
 		{#if toggleUserMenu}
-			<UserMenu userInfo={$user} />
+		<div class="fixed inset-0 z-10" aria-hidden="true" onclick={() => toggleUserMenu = false} ></div>
+		<UserMenu userInfo={$user} />
 		{/if}
 	{/if}
-		<DarkToggle></DarkToggle>
 	</div>
 </nav>
 {@render children()}
