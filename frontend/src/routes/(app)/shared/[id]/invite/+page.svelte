@@ -8,13 +8,12 @@
 	import type { PageProps } from './$types';
 
 	let { data, form }: PageProps = $props();
-	let isOpen = $state(false);
 	setInviteState();
 	const inviteState = getInviteState();
 </script>
 
 <ModalWrapper>
-	<GroupModal bind:isOpen step="2" startStep="2" endStep="2" invites={inviteState.invites}>
+	<GroupModal step="2" startStep="2" endStep="2" invites={inviteState.invites}>
 		<!-- Hidden, just to catch inputs-->
 		<form id="shared" method="POST" action="?/invite" use:enhance>
 			{#each inviteState.invites as invite}

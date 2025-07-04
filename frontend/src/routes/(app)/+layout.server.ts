@@ -19,5 +19,5 @@ export const load: LayoutServerLoad = async () => {
 	const shared = await res.json();
 
 	groups.set(shared);
-	return { shared };
+	return { loggedInUser, shared };
 };

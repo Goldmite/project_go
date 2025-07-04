@@ -11,13 +11,16 @@ export const actions = {
 			body: data
 		});
 
+		if (res.status == 404) {
+			return fail(res.status, { notfound: true });
+		}
 		if (res.status != 200) {
 			return fail(res.status);
 		}
 
 		const userJson = await res.json();
 		user.set(userJson);
-		redirect(303, '/personal');
+		redirect(303, '/dashboard');
 	},
 	signup: async (event) => {
 		const data = await event.request.formData();
@@ -27,6 +30,9 @@ export const actions = {
 			body: data
 		});
 
+		if (res.status == 409) {
+			return fail(res.status, { emailtaken: true });
+		}
 		if (res.status != 201) {
 			return fail(res.status);
 		}

@@ -22,11 +22,11 @@
 </script>
 
 <div
-	class="inset-shadow-md dots flex h-full flex-col overflow-hidden rounded-2xl border backdrop-brightness-95
+	class="inset-shadow-md dots flex h-full flex-col overflow-hidden rounded-2xl border bg-current/7
     {invites.length !== 0 && 'alternate'}"
 >
 	<div
-		class="bg-logo-red/80 flex items-center justify-between border-b border-dashed px-3 backdrop-brightness-50"
+		class="bg-logo-red flex items-center justify-between border-b border-dashed px-3 brightness-90"
 	>
 		<h1 class="text-dark/80 font-serif text-2xl font-light tracking-tight italic text-shadow-lg/15">
 			{header}

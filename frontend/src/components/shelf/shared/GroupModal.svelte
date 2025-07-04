@@ -1,24 +1,28 @@
 <script lang="ts">
+	import { pushState, replaceState } from '$app/navigation';
+	import { page } from '$app/state';
 	import PageSubheader from '../../PageSubheader.svelte';
 
 	let {
 		children,
-		isOpen = $bindable(),
 		step = $bindable(),
 		startStep,
 		endStep,
 		name = '',
-		invites
+		invites,
+		direction = $bindable()
 	} = $props();
 
 	function handleArrows(next: boolean) {
 		if (next) {
+			direction = 1;
 			if (step == 1) {
 				step = 2;
 			} else if (step == 2) {
 				step = 3;
 			}
 		} else {
+			direction = -1;
 			if (step == 2) {
 				step = 1;
 			} else if (step == 3) {
@@ -45,7 +49,7 @@
 {/snippet}
 
 <div
-	class="bg-light text-dark flex h-[500px] w-full flex-col rounded-2xl border px-8 py-4 font-sans sm:w-2/3 md:w-1/2 lg:w-2/5 2xl:w-1/4"
+	class="bg-light text-dark flex h-[500px] w-full flex-col overflow-hidden rounded-2xl border px-8 py-4 font-sans sm:w-2/3 md:w-1/2 lg:w-2/5 2xl:w-1/4"
 >
 	<!-- Modal headers -->
 	<div class="mx-4">
@@ -73,7 +77,6 @@
 		{#if step == endStep}
 			<button
 				class="active:inset-shadow-md bg-logo-blue mx-4 w-full rounded-2xl p-2 text-lg hover:outline-1 focus:outline-1 active:text-base disabled:invisible"
-				onclick={() => (isOpen = false)}
 				disabled={invites.length === 0}
 				type="submit"
 				form="shared"
