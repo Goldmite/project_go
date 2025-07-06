@@ -23,10 +23,6 @@
 	});
 </script>
 
-{#snippet errorMsg(msg: string)}
-	<p class="text-sm/4 font-bold"><span class="bg-logo-red/90">{msg}</span></p>
-{/snippet}
-
 <PageHeader>Your shelf</PageHeader>
 <BookGrid books={data.books}>
 	<button

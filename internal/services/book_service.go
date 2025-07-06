@@ -54,13 +54,13 @@ func (bookService *BookService) FetchByIsbnFromApi(isbn string) (*models.Book, e
 	return &result.Items[0].Book, nil
 }
 
-func (bookService *BookService) GetBookByIsbn(isbn string) (*models.Book, error) {
+func (bookService *BookService) GetBookByIsbn(isbn string) (*models.BookInfoResponse, error) {
 	query := "SELECT * FROM books WHERE isbn = ?"
 	row := bookService.database.QueryRow(query, isbn)
 
-	var book models.Book
+	var book models.BookInfoResponse
 	var authorsJson string
-	err := row.Scan(&book.ISBN, &book.Title, &authorsJson, &book.Pages, &book.Description, &book.Publisher, &book.PublishDate, &book.Language, &book.Cover.Url)
+	err := row.Scan(&book.ISBN, &book.Title, &authorsJson, &book.Pages, &book.Description, &book.Publisher, &book.PublishDate, &book.Language, &book.Cover)
 	if err != nil {
 		return nil, err
 	}

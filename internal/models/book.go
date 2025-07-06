@@ -32,3 +32,15 @@ type BookResponse struct {
 	Authors []string `json:"authors"`
 	Cover   string   `json:"cover"`
 }
+
+type BookInfoResponse struct {
+	ISBN        string   `json:"isbn"`
+	Title       string   `json:"title"`
+	Authors     []string `json:"authors"`
+	Pages       uint     `json:"pages"`
+	Description string   `json:"description"`
+	Publisher   string   `json:"publisher"`
+	PublishDate string   `json:"publishedDate"`
+	Language    string   `json:"language"`
+	Cover       string   `json:"cover"`
+}
