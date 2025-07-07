@@ -1,11 +1,9 @@
 import type { PageServerLoad } from './$types';
-import { user } from '$lib/stores/user';
-import { get } from 'svelte/store';
 import { fail, type Actions } from '@sveltejs/kit';
 import { PUBLIC_API_URL } from '$env/static/public';
 
-export const load: PageServerLoad = async () => {
-	const currUser = get(user);
+export const load: PageServerLoad = async ({ locals }) => {
+	const currUser = locals.user;
 	if (!currUser) {
 		return;
 	}
@@ -16,7 +14,7 @@ export const load: PageServerLoad = async () => {
 
 export const actions = {
 	default: async (event) => {
-		const userId = get(user)?.id;
+		const userId = event.locals.user?.id;
 		const isbn = (await event.request.formData()).get('isbn');
 		const len = isbn?.valueOf().toString().length;
 

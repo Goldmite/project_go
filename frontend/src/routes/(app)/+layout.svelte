@@ -4,12 +4,8 @@
 	import AddGroupModalPage from './shared/add/+page.svelte';
 	import InviteModalPage from './shared/[id]/invite/+page.svelte';
 	import type { LayoutProps } from './$types';
-	import type { User } from '$lib/types/user';
-	import { setUserState } from '$lib/userState.svelte';
 
 	let { data, children }: LayoutProps = $props();
-	const loggedIn: User | undefined = data.loggedInUser;
-	if (loggedIn) setUserState(loggedIn);
 	let currentPage = $derived(page.url.pathname);
 </script>
 
