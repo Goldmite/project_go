@@ -6,7 +6,10 @@ import { PUBLIC_API_URL } from '$env/static/public';
 
 export const load: PageServerLoad = async () => {
 	const currUser = get(user);
-	const res = await fetch(`${PUBLIC_API_URL}/books/user/${currUser?.id}`);
+	if (!currUser) {
+		return;
+	}
+	const res = await fetch(`${PUBLIC_API_URL}/books/user/${currUser.id}`);
 	const books = await res.json();
 	return { books };
 };

@@ -1,11 +1,13 @@
 <script lang="ts">
+	import { bookOwners } from '$lib/stores/localMembers';
 	import CoverWrapper from './CoverWrapper.svelte';
 
-	let { isbn, title, authors, cover } = $props();
+	let { ownedBy, isbn, title, authors, cover } = $props();
+
 </script>
 
 <div class="w-42 sm:w-56">
-	<a data-sveltekit-preload-data="tap" href="/book/{isbn}">
+	<a data-sveltekit-preload-data="tap" onclick={() => bookOwners.set(ownedBy)} href="/book/{isbn}">
 		<CoverWrapper {cover} {title} />
 	</a>
 	<p class="font-semibold">{title}</p>

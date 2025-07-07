@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/Goldmite/project_go/internal/models"
+	"github.com/Goldmite/project_go/internal/models/dto"
 )
 
 type IBookService interface {
@@ -54,11 +56,11 @@ func (bookService *BookService) FetchByIsbnFromApi(isbn string) (*models.Book, e
 	return &result.Items[0].Book, nil
 }
 
-func (bookService *BookService) GetBookByIsbn(isbn string) (*models.BookInfoResponse, error) {
+func (bookService *BookService) GetBookByIsbn(isbn string) (*dto.BookInfoResponse, error) {
 	query := "SELECT * FROM books WHERE isbn = ?"
 	row := bookService.database.QueryRow(query, isbn)
 
-	var book models.BookInfoResponse
+	var book dto.BookInfoResponse
 	var authorsJson string
 	err := row.Scan(&book.ISBN, &book.Title, &authorsJson, &book.Pages, &book.Description, &book.Publisher, &book.PublishDate, &book.Language, &book.Cover)
 	if err != nil {
@@ -94,8 +96,8 @@ func (bookService *BookService) AddNewBookForUser(userId, isbn string) error {
 	return nil
 }
 
-func (bookService *BookService) GetAllUserBooks(userId string) ([]models.BookResponse, error) {
-	query := "SELECT isbn, title, authors, cover_url FROM books JOIN views ON isbn = book_id WHERE user_id = ?"
+func (bookService *BookService) GetAllUserBooks(userId string) ([]dto.BookResponse, error) {
+	query := "SELECT user_id, isbn, title, authors, cover_url FROM books JOIN views ON isbn = book_id WHERE user_id = ?"
 	rows, err := bookService.database.Query(query, userId)
 	if err != nil {
 		return nil, err
@@ -110,11 +112,11 @@ func (bookService *BookService) GetAllUserBooks(userId string) ([]models.BookRes
 	return userBooks, nil
 }
 
-func (bookService *BookService) GetAllGroupBooks(groupId string) ([]models.BookResponse, error) {
-	query := "SELECT isbn, title, authors, cover_url FROM books b " +
+func (bookService *BookService) GetAllGroupBooks(groupId string) ([]dto.BookResponse, error) {
+	query := "SELECT GROUP_CONCAT(m.user_id), isbn, title, authors, cover_url FROM books b " +
 		"JOIN views v ON b.isbn = v.book_id " +
 		"JOIN members m ON v.user_id = m.user_id " +
-		"WHERE m.group_id = ?"
+		"WHERE m.group_id = ? GROUP BY isbn"
 	rows, err := bookService.database.Query(query, groupId)
 	if err != nil {
 		return nil, err
@@ -129,15 +131,18 @@ func (bookService *BookService) GetAllGroupBooks(groupId string) ([]models.BookR
 	return groupBooks, nil
 }
 
-func GetAllBooksHelper(rows *sql.Rows) ([]models.BookResponse, error) {
-	var books []models.BookResponse
+func GetAllBooksHelper(rows *sql.Rows) ([]dto.BookResponse, error) {
+	var books []dto.BookResponse
 	for rows.Next() {
-		var b models.BookResponse
+		var b dto.BookResponse
+		var groupedOwners string
 		var authorsJsons string
-		err := rows.Scan(&b.ISBN, &b.Title, &authorsJsons, &b.Cover)
+		err := rows.Scan(&groupedOwners, &b.ISBN, &b.Title, &authorsJsons, &b.Cover)
 		if err != nil {
 			return nil, err
 		}
+		b.OwnedBy = strings.Split(groupedOwners, ",")
+
 		err = json.Unmarshal([]byte(authorsJsons), &b.Authors)
 		if err != nil {
 			return nil, fmt.Errorf("failed to parse authors JSON: %w", err)

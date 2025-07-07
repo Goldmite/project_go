@@ -11,6 +11,6 @@
 >
 	{@render children()}
 	{#each books as book (book.isbn)}
-		<BookCard isbn={book.isbn} title={book.title} authors={book.authors} cover={book.cover} />
+		<BookCard ownedBy={book.owned_by} isbn={book.isbn} title={book.title} authors={book.authors} cover={book.cover} />
 	{/each}
 </div>

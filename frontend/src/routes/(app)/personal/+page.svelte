@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { groupMembers } from '$lib/stores/localMembers';
 	import ErrorMsg from '../../../components/errors/ErrorMsg.svelte';
 	import PageHeader from '../../../components/PageHeader.svelte';
 	import BookGrid from '../../../components/shelf/BookGrid.svelte';
@@ -7,6 +8,7 @@
 	import type { PageProps } from './$types';
 
 	let { data, form }: PageProps = $props();
+	groupMembers.set([]);
 	let isOpen = $state(false);
 	let isbn = $state('');
 	let addBookForm: HTMLFormElement;

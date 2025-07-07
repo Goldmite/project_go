@@ -1,4 +1,5 @@
 export interface Book {
+	owned_by: string[];
 	isbn: string;
 	title: string;
 	authors: string[];

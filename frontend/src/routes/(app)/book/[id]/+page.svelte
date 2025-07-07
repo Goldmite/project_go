@@ -1,13 +1,17 @@
 <script lang="ts">
-	import { read } from '$app/server';
 	import type { Book } from '$lib/types/book';
 	import { toReadableLanguage } from '$lib/types/enums/language';
+	import type { User } from '$lib/types/user';
 	import PageSubheader from '../../../../components/PageSubheader.svelte';
 	import CoverWrapper from '../../../../components/shelf/CoverWrapper.svelte';
+	import MembersList from '../../../../components/shelf/shared/MembersList.svelte';
 	import type { PageProps } from './$types';
+	import { bookOwners, groupMembers } from '$lib/stores/localMembers';
 
 	let { data }: PageProps = $props();
 	const book: Book = data.book;
+	book.owned_by = $bookOwners;
+	const owners: User[] = $groupMembers.filter((m) => book.owned_by.includes(m.id));
 	let readMore = $state(false);
 	const descriptionPreview = 300;
 </script>
@@ -26,7 +30,7 @@
 				{/each}
 			</p>
 		</span>
-
+		<MembersList members={owners}></MembersList>
 		<p class="my-4 text-justify hyphens-auto">
 			{#if readMore}
 				{book.description}
