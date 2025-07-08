@@ -7,6 +7,7 @@
 	import MembersList from '../../../../components/shelf/shared/MembersList.svelte';
 	import type { PageProps } from './$types';
 	import { bookOwners, groupMembers } from '$lib/stores/localMembers';
+	import BackButton from '../../../../components/navigation/BackButton.svelte';
 
 	let { data }: PageProps = $props();
 	const book: Book = data.book;
@@ -20,8 +21,7 @@
 <div class="flex flex-col gap-2 sm:gap-6 min-h-[80vh]">
 	<span class="flex flex-col items-baseline my-3 sm:flex-row sm:gap-4">
 		<PageSubheader>
-			<button class="mr-1 text-logo-red" onclick={() => history.back()}>{"<--"}</button>
-			{book.title}
+			<BackButton />{book.title}
 		</PageSubheader>
 		<p class="inline font-light italic">
 			by
