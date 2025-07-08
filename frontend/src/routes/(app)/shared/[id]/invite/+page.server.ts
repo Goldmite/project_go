@@ -1,5 +1,4 @@
 import { checkUser } from '$lib/server/inviteValidity';
-import { user } from '$lib/stores/user';
 import { error, fail, redirect, type Actions } from '@sveltejs/kit';
 import { get } from 'svelte/store';
 import type { PageServerLoad } from './$types';
@@ -23,7 +22,7 @@ export const actions = {
 	invite: async (event) => {
 		const emails = (await event.request.formData()).getAll('emails[]');
 		if (!emails) return fail(404);
-		const userId = get(user)?.id ?? '';
+		const userId = event.locals.user?.id ?? '';
 		const groupId = event.params.id ?? '';
 
 		const inviteForm = new FormData();
@@ -43,6 +42,6 @@ export const actions = {
 	},
 	checkUser: async (event) => {
 		const email = (await event.request.formData()).get('email') ?? '';
-		return checkUser(email);
+		return checkUser(email, event.locals.user);
 	}
 } satisfies Actions;

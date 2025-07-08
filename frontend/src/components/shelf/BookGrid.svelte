@@ -1,7 +1,8 @@
 <script lang="ts">
+	import type { Book } from '$lib/types/book';
 	import BookCard from './BookCard.svelte';
 
-	let { books, children = () => {} } = $props();
+	let { books, children = () => {} }: { books: Book[]; children?: Function } = $props();
 </script>
 
 <div
@@ -11,6 +12,12 @@
 >
 	{@render children()}
 	{#each books as book (book.isbn)}
-		<BookCard title={book.title} authors={book.authors} cover={book.cover} />
+		<BookCard
+			ownedBy={book.owned_by}
+			isbn={book.isbn}
+			title={book.title}
+			authors={book.authors}
+			cover={book.cover}
+		/>
 	{/each}
 </div>

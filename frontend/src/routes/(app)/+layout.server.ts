@@ -1,12 +1,10 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
-import { get } from 'svelte/store';
-import { user } from '$lib/stores/user';
 import { groups } from '$lib/stores/group';
 import { PUBLIC_API_URL } from '$env/static/public';
 
-export const load: LayoutServerLoad = async () => {
-	const loggedInUser = get(user);
+export const load: LayoutServerLoad = async ({ locals }) => {
+	const loggedInUser = locals.user;
 	if (!loggedInUser) {
 		redirect(307, '/login');
 	}
@@ -19,5 +17,5 @@ export const load: LayoutServerLoad = async () => {
 	const shared = await res.json();
 
 	groups.set(shared);
-	return { loggedInUser, shared };
+	return { shared };
 };

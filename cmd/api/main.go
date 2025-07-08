@@ -35,7 +35,7 @@ func main() {
 	api.GET("/users/invites/:id", userHandler.GetUserInvitesHandler)
 
 	api.POST("/books", bookHandler.AddNewBookForUserHandler)
-	api.GET("/books/:isbn", bookHandler.FetchByIsbnFromApiHandler)
+	api.GET("/books/:isbn", bookHandler.GetBookByIsbnHandler)
 	api.GET("/books/user/:id", bookHandler.GetAllUserBooksHandler)
 	api.GET("/books/groups/:id", bookHandler.GetAllGroupBooksHandler)
 

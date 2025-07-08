@@ -22,7 +22,7 @@
 		</div>
 		<div class="flex w-full flex-col gap-2 border-t-1 border-dashed pt-2 italic sm:flex-row">
 			<button
-				class=" bg-logo-blue text-dark active:inset-shadow-md h-8 w-full rounded-2xl
+				class=" bg-logo-purple text-dark active:inset-shadow-md h-8 w-full rounded-2xl
                 hover:brightness-90 active:text-sm sm:w-1/2"
 				type="button">Edit</button
 			>

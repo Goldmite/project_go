@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../app.css';
-	import logo from '$lib/assets/SHELF_LOGO_2.svg';
+	import logo from '$lib/assets/SHELF_LOGO_3.svg';
 	import DarkToggle from '../components/DarkToggle.svelte';
 	import UserMenu from '../components/UserMenu.svelte';
 	import { user } from '$lib/stores/user';

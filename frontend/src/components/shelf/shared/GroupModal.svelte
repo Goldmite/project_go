@@ -76,7 +76,7 @@
 		{@render arrowButton(true)}
 		{#if step == endStep}
 			<button
-				class="active:inset-shadow-md bg-logo-blue mx-4 w-full rounded-2xl p-2 text-lg hover:outline-1 focus:outline-1 active:text-base disabled:invisible"
+				class="active:inset-shadow-md bg-status-logo-done mx-4 w-full rounded-2xl p-2 text-lg hover:outline-1 focus:outline-1 active:text-base disabled:invisible"
 				disabled={invites.length === 0}
 				type="submit"
 				form="shared"

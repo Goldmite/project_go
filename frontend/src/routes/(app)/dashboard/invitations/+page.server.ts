@@ -1,11 +1,9 @@
-import { get } from 'svelte/store';
 import type { PageServerLoad } from '../../personal/$types';
-import { user } from '$lib/stores/user';
 import { PUBLIC_API_URL } from '$env/static/public';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 
-export const load: PageServerLoad = async () => {
-	const userId = get(user)?.id;
+export const load: PageServerLoad = async ({ locals }) => {
+	const userId = locals.user?.id;
 	if (!userId) return;
 
 	const invsRes = await fetch(`${PUBLIC_API_URL}/users/invites/${userId}`);
@@ -18,7 +16,7 @@ export const load: PageServerLoad = async () => {
 
 export const actions = {
 	accept: async (event) => {
-		const currUser = get(user);
+		const currUser = event.locals.user;
 		const formData = await event.request.formData();
 		const groupId = formData.get('group_id');
 		const toRedirect: boolean = formData.get('redirect') === 'true';
@@ -44,7 +42,7 @@ export const actions = {
 		return { success: true, isAccepted: true };
 	},
 	decline: async (event) => {
-		const userEmail = get(user)?.email;
+		const userEmail = event.locals.user?.email;
 		const groupId = (await event.request.formData()).get('group_id');
 		if (!userEmail || !groupId) return fail(400);
 

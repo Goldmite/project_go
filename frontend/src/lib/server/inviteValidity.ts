@@ -1,11 +1,10 @@
 import { PUBLIC_API_URL } from '$env/static/public';
-import { user } from '$lib/stores/user';
+import type { User } from '$lib/types/user';
 import { fail } from '@sveltejs/kit';
-import { get } from 'svelte/store';
 
-export async function checkUser(email: FormDataEntryValue) {
+export async function checkUser(email: FormDataEntryValue, currUsr: User | null) {
 	if (email === '') return fail(400);
-	const currUserEmail = get(user)?.email;
+	const currUserEmail = currUsr?.email ?? '';
 	if (currUserEmail == email) {
 		return fail(409, { email, yourself: true });
 	}

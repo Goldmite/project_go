@@ -1,15 +1,13 @@
 import { PUBLIC_API_URL } from '$env/static/public';
 import { checkUser } from '$lib/server/inviteValidity';
-import { user } from '$lib/stores/user';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
-import { get } from 'svelte/store';
 
 export const actions = {
 	createShared: async (event) => {
 		const data = await event.request.formData();
 		let name = data.get('name')?.toString() ?? '';
 		if (name === '') name = 'Group';
-		const userId = get(user)?.id ?? '';
+		const userId = event.locals.user?.id ?? '';
 
 		const createForm = new FormData();
 		createForm.append('id', userId);
@@ -43,6 +41,6 @@ export const actions = {
 	},
 	checkUser: async (event) => {
 		const email = (await event.request.formData()).get('email') ?? '';
-		return checkUser(email);
+		return checkUser(email, event.locals.user);
 	}
 } satisfies Actions;

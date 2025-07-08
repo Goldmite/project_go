@@ -5,8 +5,12 @@
 	import MembersList from '../../../../components/shelf/shared/MembersList.svelte';
 	import { preloadData, pushState } from '$app/navigation';
 	import { page } from '$app/state';
+	import { groupMembers } from '$lib/stores/localMembers';
 
 	let { data }: PageProps = $props();
+	$effect(() => {
+		if (data.members) groupMembers.set(data.members);
+	});
 </script>
 
 <span class="flex flex-col items-baseline justify-between md:flex-row">
