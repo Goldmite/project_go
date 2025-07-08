@@ -35,7 +35,7 @@
 	</button>
 {/snippet}
 
-<div class="m-2 sm:m-10">
+<div class="m-2 sm:mx-10 sm:mt-6">
 	<div class="inline-flex">
 		{@render AppNavButton('Dashboard', '/dashboard')}
 		{@render AppNavButton('Personal', '/personal')}
