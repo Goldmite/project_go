@@ -3,7 +3,6 @@
 	import CoverWrapper from './CoverWrapper.svelte';
 
 	let { ownedBy, isbn, title, authors, cover } = $props();
-
 </script>
 
 <div class="w-42 sm:w-56">

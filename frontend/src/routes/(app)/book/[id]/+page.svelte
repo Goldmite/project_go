@@ -12,6 +12,7 @@
 	const book: Book = data.book;
 	book.owned_by = $bookOwners;
 	const owners: User[] = $groupMembers.filter((m) => book.owned_by.includes(m.id));
+
 	let readMore = $state(false);
 	const descriptionPreview = 300;
 </script>

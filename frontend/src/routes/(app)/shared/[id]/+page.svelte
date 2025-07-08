@@ -8,7 +8,9 @@
 	import { groupMembers } from '$lib/stores/localMembers';
 
 	let { data }: PageProps = $props();
-	if (data.members) groupMembers.set(data.members);
+	$effect(() => {
+		if (data.members) groupMembers.set(data.members);
+	});
 </script>
 
 <span class="flex flex-col items-baseline justify-between md:flex-row">
