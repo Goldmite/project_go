@@ -1,1 +1,1 @@
-<button class="mr-4 text-logo-red font-sans" onclick={() => history.back()}>{"<-I"}</button>
+<button class="text-logo-red mr-4 font-sans" onclick={() => history.back()}>{'<-I'}</button>

@@ -18,8 +18,8 @@
 	const descriptionPreview = 300;
 </script>
 
-<div class="flex flex-col gap-2 sm:gap-6 min-h-[80vh]">
-	<span class="flex flex-col items-baseline my-3 sm:flex-row sm:gap-4">
+<div class="flex min-h-[80vh] flex-col gap-2 sm:gap-6">
+	<span class="my-3 flex flex-col items-baseline sm:flex-row sm:gap-4">
 		<PageSubheader>
 			<BackButton />{book.title}
 		</PageSubheader>
@@ -52,7 +52,7 @@
 					{/if}
 				</button>
 			</p>
-		</div>	
+		</div>
 	</div>
 
 	<footer class="flex justify-center sm:justify-start">

@@ -8,8 +8,8 @@
 	--color-dark: oklch(27.4% 0.006 286.033);
 	--color-logo-red: #ff7e7e; /* means current, cancel, delete, go back, use existing*/
 	--color-logo-blue: #7e80ff; /* means new, create, add*/
-	--color-logo-purple: #b87eff;/* means update, change */
-	--color-status-logo-progress: #ffd27e;/* means in progress, medium */
+	--color-logo-purple: #b87eff; /* means update, change */
+	--color-status-logo-progress: #ffd27e; /* means in progress, medium */
 	--color-status-logo-done: #87b6a7; /* means accept, success, good, done */
 	--inset-shadow-md: inset -1px 1px 8px rgba(0, 0, 0, 0.25);
 }
