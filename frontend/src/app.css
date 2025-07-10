@@ -21,6 +21,11 @@
 		padding: var(--spacing);
 		width: 100%;
 	}
+	.indented {
+		padding: 0.5rem;
+		border-radius: 1rem;
+		box-shadow: var(--inset-shadow-md);
+	}
 
 	.dots {
 		background-image: radial-gradient(var(--color-logo-red) 0px, transparent 2px);
