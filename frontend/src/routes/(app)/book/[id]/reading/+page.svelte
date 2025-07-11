@@ -4,7 +4,6 @@
 	import { Timer } from '$lib/timerState.svelte';
 	import PageSubheader from '../../../../../components/PageSubheader.svelte';
 	import { enhance } from '$app/forms';
-	import { getPace } from '$lib/helpers/paceCalculation';
 
 	const timer = new Timer();
 	let ts = $derived(timer.state);
@@ -16,7 +15,7 @@
 	};
 	let { form, data } = $props();
 	const actualStartPage = 2; // data.pagesRead
-	const actualTimeRead = 1 * 60;
+	const actualTimeRead = 0 * 60;
 	const actualPace = actualStartPage / (actualTimeRead / 60); // data.timeRead
 	let estimateEndPage = $state(actualStartPage);
 	// Time input in case of edit and validation
@@ -92,9 +91,8 @@
 		openSessionModal = true;
 		timeMinsInput = '';
 		submitTime = timer.state.timeReadSec;
-		const pace = isNaN(actualPace) ? submitTime / 60 : actualPace;
-		const time = (actualTimeRead + submitTime) / 60;
-		estimateEndPage = actualStartPage + Math.floor((submitTime / 60) * getPace(time, pace));
+		const pace = isFinite(actualPace) ? actualPace : 0;
+		estimateEndPage = actualStartPage + Math.floor((submitTime / 60) * pace);
 	}
 </script>
 
