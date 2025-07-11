@@ -4,6 +4,7 @@
 	import { Timer } from '$lib/timerState.svelte';
 	import PageSubheader from '../../../../../components/PageSubheader.svelte';
 	import { enhance } from '$app/forms';
+	import { getPace } from '$lib/helpers/paceCalculation';
 
 	const timer = new Timer();
 	let ts = $derived(timer.state);
@@ -13,6 +14,11 @@
 			timer.state = Timer.fromJSON(state);
 		}
 	};
+	let { form, data } = $props();
+	const actualStartPage = 2; // data.pagesRead
+	const actualTimeRead = 1 * 60;
+	const actualPace = actualStartPage / (actualTimeRead / 60); // data.timeRead
+	let estimateEndPage = $state(actualStartPage);
 	// Time input in case of edit and validation
 	let submitTime = $state(0);
 	let editTime = $state(false);
@@ -26,7 +32,7 @@
 		}
 	}
 	// Reading pace calculations
-	let pagesRead = $state(120 - 100);
+	let pagesRead = $derived(estimateEndPage - actualStartPage);
 	let pagesPerHour = $derived(
 		submitTime !== 0
 			? Math.floor(pagesRead / (0.0002777777 * submitTime))
@@ -42,10 +48,10 @@
 		}
 	});
 	// Start / End page nr in case of edit and validation
-	let placeholderStart = (100).toString();
+	let placeholderStart = (actualStartPage).toString();
 	let startInput = $state(placeholderStart);
-	let placeholderEnd = (120).toString();
-	let endInput = $state(placeholderEnd);
+	let placeholderEnd = $derived((estimateEndPage).toString());
+	let endInput = $derived(placeholderEnd);
 	function validateInput(isStart: boolean) {
 		if (startInput === '') startInput = '0';
 		if (endInput === '') endInput = '0';
@@ -86,6 +92,9 @@
 		openSessionModal = true;
 		timeMinsInput = '';
 		submitTime = timer.state.timeReadSec;
+		const pace = isNaN(actualPace) ? submitTime / 60 : actualPace;
+		const time = (actualTimeRead + submitTime) / 60;
+		estimateEndPage = actualStartPage + Math.floor((submitTime / 60) * getPace(time, pace));
 	}
 </script>
 
