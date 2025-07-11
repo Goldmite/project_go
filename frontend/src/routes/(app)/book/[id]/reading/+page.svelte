@@ -3,6 +3,7 @@
 	import type { Snapshot } from './$types';
 	import { Timer } from '$lib/timerState.svelte';
 	import PageSubheader from '../../../../../components/PageSubheader.svelte';
+	import { enhance } from '$app/forms';
 
 	const timer = new Timer();
 	let ts = $derived(timer.state);
@@ -12,27 +13,56 @@
 			timer.state = Timer.fromJSON(state);
 		}
 	};
-	let startPage = (100).toString();
-	let startInput = $state(startPage);
-	let endPage = (120).toString();
-	let endInput = $state(endPage);
-
-	let pagesRead = $derived(+endInput - +startInput);
+	// Time input in case of edit and validation
+	let submitTime = $state(0);
+	let editTime = $state(false);
+	let timeMinsInput = $state('');
+	function checkTimeInput() {
+		editTime = false;
+		if (timeMinsInput === '') {
+			submitTime = timer.state.timeReadSec;
+		} else {
+			submitTime = parseInt(timeMinsInput) * 60;
+		}
+	}
+	// Reading pace calculations
+	let pagesRead = $state(120 - 100);
 	let pagesPerHour = $derived(
-		timer.state.timeReadSec !== 0
-			? Math.floor(pagesRead / (0.0002777777 * timer.state.timeReadSec))
+		submitTime !== 0
+			? Math.floor(pagesRead / (0.0002777777 * submitTime))
 			: 0
 	);
 	const readingPerformance = $derived.by(() => {
-		if (pagesPerHour < 45) {
+		if (pagesPerHour < 50) {
 			return 'slow';
-		} else if (pagesPerHour <= 60) {
+		} else if (pagesPerHour <= 70) {
 			return 'average';
 		} else {
 			return 'fast';
 		}
 	});
+	// Start / End page nr in case of edit and validation
+	let placeholderStart = (100).toString();
+	let startInput = $state(placeholderStart);
+	let placeholderEnd = (120).toString();
+	let endInput = $state(placeholderEnd);
+	function validateInput(isStart: boolean) {
+		if (startInput === '') startInput = '0';
+		if (endInput === '') endInput = '0';
 
+		const startPage = parseInt(startInput);
+		const endPage = parseInt(endInput);
+		if (startPage > endPage) {
+			if (isStart) {
+				endInput = startInput;
+			} else {
+				startInput = endInput;
+			}
+		}
+		pagesRead = endPage - startPage;
+		if (pagesRead < 0) pagesRead = 0;
+	}
+	// Set goal time and modal toggle
 	const goalOptions = [0.5, 30, 45, 60, 75, 90, 120, 150, 180]; //minutes
 	let openGoalModal = $state(false);
 	async function setGoal(goalMin: number) {
@@ -41,7 +71,7 @@
 		await new Promise((resolve) => setTimeout(resolve, 200));
 		ts.isGoalSet = true;
 	}
-
+	// Change time from seconds to H:MM:SS format
 	let formatedTime: string = $derived.by(() => formatTime(ts.timeReadSec));
 	function formatTime(durationSec: number): string {
 		const hour = Math.floor(durationSec / 3600);
@@ -49,11 +79,13 @@
 		const sec = Math.floor(durationSec - hour * 3600 - min * 60);
 		return `${hour.toString().padStart(1, '0')}:${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
 	}
-
+	// Done reading opens end session modal with stats
 	let openSessionModal = $state(false);
 	function endSession() {
 		timer.state.isRunning = false; // pause timer
 		openSessionModal = true;
+		timeMinsInput = '';
+		submitTime = timer.state.timeReadSec;
 	}
 </script>
 
@@ -153,9 +185,9 @@
 	{#if openSessionModal}
 		<div
 			class="bg-light dark:bg-dark absolute z-10 h-[382px] w-[300px] overflow-hidden rounded-xl sm:h-[584px] sm:w-[500px]"
-			transition:slide
-		>
-			<div class="flex size-full flex-col gap-2 bg-current/15 px-2 pb-3.5 sm:gap-4 sm:p-4">
+			transition:slide>
+			<form method="POST" use:enhance 
+				class="flex size-full flex-col gap-2 bg-current/15 px-2 pb-3.5 sm:gap-4 sm:p-4">
 				<PageSubheader>Reading session</PageSubheader>
 				<div class="flex justify-between gap-2 text-current/80 sm:gap-4">
 					<div class="indented bg-logo-purple/20 flex grow flex-col justify-around">
@@ -165,9 +197,13 @@
 								<input
 									class="outline-0 focus:underline"
 									type="text"
+									inputmode="numeric"
+									placeholder={placeholderStart}
 									bind:value={startInput}
-									placeholder={startPage}
+									oninput={() => (startInput = startInput.replace(/\D/g, ''))}
+									onblur={() => validateInput(true)}
 									maxlength="4"
+									required
 								/>
 								<span class="icon-[solar--pen-outline]"></span>
 							</span>
@@ -179,9 +215,13 @@
 									class="outline-0 focus:underline"
 									name="end"
 									type="text"
+									inputmode="numeric"
+									placeholder={placeholderEnd}
 									bind:value={endInput}
-									placeholder={endPage}
+									oninput={() => (endInput = endInput.replace(/\D/g, ''))}
+									onblur={() => validateInput(false)}
 									maxlength="4"
+									required
 								/>
 								<span class="icon-[solar--pen-outline]"></span>
 							</span>
@@ -194,12 +234,34 @@
 					</div>
 				</div>
 				<div
-					class="indented w-full text-center {timer.complete
+					class="indented w-full text-center {editTime ? 'bg-logo-purple/20' : submitTime >= timer.state.goalTime
 						? 'bg-status-logo-done/20'
 						: 'bg-logo-red/20'}"
-				>
+					>
+					<input name="time" type="hidden" bind:value={submitTime}>
 					Time read: <span class="font-semibold">
-						{formatedTime} / {formatTime(timer.state.goalTime)}</span
+						{#if !editTime}
+						<div class="inline-flex h-5">
+							{formatTime(submitTime)}
+							<button onclick={() => editTime = true} aria-label="Edit time">
+								<span class="icon-[solar--pen-2-bold] size-5"></span>
+							</button>
+						</div>
+						{:else}
+						<!-- svelte-ignore a11y_autofocus -->
+						<input 
+							class="time outline-0 focus:underline"
+							name="editTime"
+							type="text"
+							inputmode="numeric"
+							placeholder={'~' + Math.round(submitTime / 60)}
+							bind:value={timeMinsInput}
+							onblur={() => checkTimeInput()}
+							oninput={() => (timeMinsInput = timeMinsInput.replace(/\D/g, ''))}
+							maxlength="3"
+							autofocus>min.
+						{/if}
+						 / {formatTime(timer.state.goalTime)}</span
 					>
 				</div>
 				<div class="flex flex-row gap-2 sm:gap-4">
@@ -233,7 +295,7 @@
 						Confirm
 					</button>
 				</div>
-			</div>
+			</form>
 		</div>
 	{/if}
 </div>
@@ -241,7 +303,11 @@
 <style>
 	input {
 		width: 3rem;
-		padding: 1px 2px;
+		padding: 0px 2px;
 		border-width: 0;
+		border-radius: 0;
+	}
+	input.time {
+		width: 2.3rem;
 	}
 </style>
