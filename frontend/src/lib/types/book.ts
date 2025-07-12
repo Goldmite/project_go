@@ -10,3 +10,9 @@ export interface Book {
 	language: string;
 	cover: string;
 }
+
+export interface BookProgress {
+	pages_read: number;
+	time_read: number;
+	first_page: number;
+}

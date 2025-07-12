@@ -19,6 +19,8 @@ func main() {
 	userHandler := handlers.NewUserHandler(userService)
 	groupService := services.NewGroupService(db)
 	groupHandler := handlers.NewGroupHandler(groupService)
+	statsService := services.NewStatsService(db)
+	statsHandler := handlers.NewStatsHandler(statsService)
 
 	router := gin.Default()
 	api := router.Group("/api")
@@ -45,6 +47,9 @@ func main() {
 	api.GET("/groups/invites/:id", groupHandler.GetInvitesHandler)
 	api.POST("/groups/invites/accept", groupHandler.AcceptInvitationHandler)
 	api.DELETE("/groups/invites/decline", groupHandler.DeclineInvitationHandler)
+
+	api.PUT("/stats/progress/book", statsHandler.UpdateBookProgressHandler)
+	api.GET("/stats/progress/book", statsHandler.GetBookProgressHandler)
 
 	router.Run(":3000")
 }

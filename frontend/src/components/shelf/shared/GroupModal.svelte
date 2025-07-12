@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { pushState, replaceState } from '$app/navigation';
-	import { page } from '$app/state';
 	import PageSubheader from '../../PageSubheader.svelte';
 
 	let {

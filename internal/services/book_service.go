@@ -87,7 +87,7 @@ func (bookService *BookService) AddNewBookForUser(userId, isbn string) error {
 		}
 	}
 
-	query := "INSERT INTO views (user_id, book_id) VALUES (?, ?)"
+	query := "INSERT INTO reading (user_id, book_id) VALUES (?, ?)"
 	_, err := bookService.database.Exec(query, userId, isbn)
 	if err != nil {
 		return fmt.Errorf("failed to insert view %w", err)
@@ -97,7 +97,7 @@ func (bookService *BookService) AddNewBookForUser(userId, isbn string) error {
 }
 
 func (bookService *BookService) GetAllUserBooks(userId string) ([]dto.BookResponse, error) {
-	query := "SELECT user_id, isbn, title, authors, cover_url FROM books JOIN views ON isbn = book_id WHERE user_id = ?"
+	query := "SELECT user_id, isbn, title, authors, cover_url FROM books JOIN reading ON isbn = book_id WHERE user_id = ?"
 	rows, err := bookService.database.Query(query, userId)
 	if err != nil {
 		return nil, err
@@ -114,7 +114,7 @@ func (bookService *BookService) GetAllUserBooks(userId string) ([]dto.BookRespon
 
 func (bookService *BookService) GetAllGroupBooks(groupId string) ([]dto.BookResponse, error) {
 	query := "SELECT GROUP_CONCAT(m.user_id), isbn, title, authors, cover_url FROM books b " +
-		"JOIN views v ON b.isbn = v.book_id " +
+		"JOIN reading r ON b.isbn = r.book_id " +
 		"JOIN members m ON v.user_id = m.user_id " +
 		"WHERE m.group_id = ? GROUP BY isbn"
 	rows, err := bookService.database.Query(query, groupId)

@@ -19,9 +19,14 @@ CREATE TABLE IF NOT EXISTS books (
     cover_url TEXT 
 );
 
-CREATE TABLE IF NOT EXISTS views (
+CREATE TABLE IF NOT EXISTS reading (
     user_id TEXT,
     book_id TEXT,
+    pages_read INTEGER DEFAULT 0,
+    time_read INTEGER DEFAULT 0,
+    first_page INTEGER DEFAULT 1,
+    session_created_at TEXT,
+    session_updated_at TEXT,
     PRIMARY KEY (user_id, book_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (book_id) REFERENCES books(isbn) ON DELETE CASCADE

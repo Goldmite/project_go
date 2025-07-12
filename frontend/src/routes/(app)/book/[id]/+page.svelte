@@ -7,6 +7,8 @@
 	import MembersList from '../../../../components/shelf/shared/MembersList.svelte';
 	import type { PageProps } from './$types';
 	import { bookOwners, groupMembers } from '$lib/stores/localMembers';
+	import BackButton from '../../../../components/navigation/BackButton.svelte';
+	import { goto } from '$app/navigation';
 
 	let { data }: PageProps = $props();
 	const book: Book = data.book;
@@ -17,11 +19,10 @@
 	const descriptionPreview = 300;
 </script>
 
-<div class="flex flex-col gap-2 sm:gap-6 min-h-[80vh]">
-	<span class="flex flex-col items-baseline my-3 sm:flex-row sm:gap-4">
+<div class="flex min-h-[80vh] flex-col gap-2 sm:gap-6">
+	<span class="my-3 flex flex-col items-baseline sm:flex-row sm:gap-4">
 		<PageSubheader>
-			<button class="mr-1 text-logo-red" onclick={() => history.back()}>{"<--"}</button>
-			{book.title}
+			<BackButton />{book.title}
 		</PageSubheader>
 		<p class="inline font-light italic">
 			by
@@ -29,6 +30,13 @@
 				{author}{i + 1 < book.authors.length ? ', ' : ''}
 			{/each}
 		</p>
+		<button
+			class="ml-auto h-12 min-w-28 rounded-2xl bg-current/15 font-light shadow-lg
+		outline-current/40 hover:outline active:font-normal"
+			onclick={() => goto(`${location.pathname}/reading`)}
+		>
+			<span class="text-2xl text-current/80">Read</span>
+		</button>
 	</span>
 	<div class="flex-1">
 		<div class="float-left mr-3 min-w-42 sm:min-w-56">
@@ -42,7 +50,7 @@
 				{:else}
 					{book.description.slice(0, descriptionPreview)}...
 				{/if}
-				<button class="text-sm italic" onclick={() => (readMore = !readMore)}>
+				<button class="text-sm text-current/80 italic" onclick={() => (readMore = !readMore)}>
 					{#if book.description.length > descriptionPreview}
 						{#if readMore}
 							See less
@@ -52,7 +60,7 @@
 					{/if}
 				</button>
 			</p>
-		</div>	
+		</div>
 	</div>
 
 	<footer class="flex justify-center sm:justify-start">
