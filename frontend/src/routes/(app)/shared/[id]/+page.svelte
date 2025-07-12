@@ -16,7 +16,7 @@
 <span class="flex flex-col items-baseline md:flex-row">
 	<PageHeader>{data.currGroup?.name} shelf</PageHeader>
 	<button
-		class="ml-auto text-dark bg-logo-blue hover:shadow-logo-blue h-12 min-w-28 rounded-2xl text-4xl
+		class="text-dark bg-logo-blue hover:shadow-logo-blue ml-auto h-12 min-w-28 rounded-2xl text-4xl
 	font-light italic shadow-lg hover:font-normal hover:outline active:font-normal"
 		onclick={async () => {
 			const result = await preloadData(`/shared/${data.currGroup.id}/invite`);

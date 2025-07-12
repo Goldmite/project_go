@@ -23,7 +23,7 @@ export const actions = {
 		}
 
 		const data = JSON.stringify({
-			userId: userId,
+			user_id: userId,
 			isbn: isbn
 		});
 		const res = await fetch(`${PUBLIC_API_URL}/books`, {

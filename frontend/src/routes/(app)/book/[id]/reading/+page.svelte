@@ -4,6 +4,7 @@
 	import { Timer } from '$lib/timerState.svelte';
 	import PageSubheader from '../../../../../components/PageSubheader.svelte';
 	import { enhance } from '$app/forms';
+	import type { BookProgress } from '$lib/types/book';
 
 	const timer = new Timer();
 	let ts = $derived(timer.state);
@@ -13,10 +14,11 @@
 			timer.state = Timer.fromJSON(state);
 		}
 	};
-	let { form, data } = $props();
-	const actualStartPage = 2; // data.pagesRead
-	const actualTimeRead = 0 * 60;
-	const actualPace = actualStartPage / (actualTimeRead / 60); // data.timeRead
+	// Current progress data
+	let { data } = $props();
+	const progress: BookProgress = data.progress;
+	const actualStartPage = progress.first_page + progress.pages_read;
+	const actualPace = progress.pages_read / (progress.time_read / 60);
 	let estimateEndPage = $state(actualStartPage);
 	// Time input in case of edit and validation
 	let submitTime = $state(0);
@@ -33,9 +35,7 @@
 	// Reading pace calculations
 	let pagesRead = $derived(estimateEndPage - actualStartPage);
 	let pagesPerHour = $derived(
-		submitTime !== 0
-			? Math.floor(pagesRead / (0.0002777777 * submitTime))
-			: 0
+		submitTime !== 0 ? Math.floor(pagesRead / (0.0002777777 * submitTime)) : 0
 	);
 	const readingPerformance = $derived.by(() => {
 		if (pagesPerHour < 50) {
@@ -47,9 +47,9 @@
 		}
 	});
 	// Start / End page nr in case of edit and validation
-	let placeholderStart = (actualStartPage).toString();
+	let placeholderStart = actualStartPage.toString();
 	let startInput = $state(placeholderStart);
-	let placeholderEnd = $derived((estimateEndPage).toString());
+	let placeholderEnd = $derived(estimateEndPage.toString());
 	let endInput = $derived(placeholderEnd);
 	function validateInput(isStart: boolean) {
 		if (startInput === '') startInput = '0';
@@ -192,17 +192,23 @@
 	{#if openSessionModal}
 		<div
 			class="bg-light dark:bg-dark absolute z-10 h-[382px] w-[300px] overflow-hidden rounded-xl sm:h-[584px] sm:w-[500px]"
-			transition:slide>
-			<form method="POST" use:enhance 
-				class="flex size-full flex-col gap-2 bg-current/15 px-2 pb-3.5 sm:gap-4 sm:p-4">
+			transition:slide
+		>
+			<form
+				method="POST"
+				use:enhance
+				class="flex size-full flex-col gap-2 bg-current/15 px-2 pb-3.5 sm:gap-4 sm:p-4"
+			>
 				<PageSubheader>Reading session</PageSubheader>
 				<div class="flex justify-between gap-2 text-current/80 sm:gap-4">
 					<div class="indented bg-logo-purple/20 flex grow flex-col justify-around">
 						<div class="border-b border-dashed pb-1">
 							Start page:
 							<span class="float-right">
+								<input type="hidden" name="firstPage" value={progress.first_page} />
 								<input
 									class="outline-0 focus:underline"
+									name="start"
 									type="text"
 									inputmode="numeric"
 									placeholder={placeholderStart}
@@ -218,9 +224,9 @@
 						<div>
 							<label for="end">End page:</label>
 							<span class="float-right">
+								<input type="hidden" name="pagesRead" value={pagesRead} />
 								<input
 									class="outline-0 focus:underline"
-									name="end"
 									type="text"
 									inputmode="numeric"
 									placeholder={placeholderEnd}
@@ -241,34 +247,37 @@
 					</div>
 				</div>
 				<div
-					class="indented w-full text-center {editTime ? 'bg-logo-purple/20' : submitTime >= timer.state.goalTime
-						? 'bg-status-logo-done/20'
-						: 'bg-logo-red/20'}"
-					>
-					<input name="time" type="hidden" bind:value={submitTime}>
-					Time read: <span class="font-semibold">
+					class="indented w-full text-center {editTime
+						? 'bg-logo-purple/20'
+						: submitTime >= timer.state.goalTime
+							? 'bg-status-logo-done/20'
+							: 'bg-logo-red/20'}"
+				>
+					<input name="time" type="hidden" bind:value={submitTime} />
+					Time read:
+					<span class="font-semibold">
 						{#if !editTime}
-						<div class="inline-flex h-5">
-							{formatTime(submitTime)}
-							<button onclick={() => editTime = true} aria-label="Edit time">
-								<span class="icon-[solar--pen-2-bold] size-5"></span>
-							</button>
-						</div>
+							<div class="inline-flex h-5">
+								{formatTime(submitTime)}
+								<button onclick={() => (editTime = true)} aria-label="Edit time">
+									<span class="icon-[solar--pen-2-bold] size-5"></span>
+								</button>
+							</div>
 						{:else}
-						<!-- svelte-ignore a11y_autofocus -->
-						<input 
-							class="time outline-0 focus:underline"
-							name="editTime"
-							type="text"
-							inputmode="numeric"
-							placeholder={'~' + Math.round(submitTime / 60)}
-							bind:value={timeMinsInput}
-							onblur={() => checkTimeInput()}
-							oninput={() => (timeMinsInput = timeMinsInput.replace(/\D/g, ''))}
-							maxlength="3"
-							autofocus>min.
+							<!-- svelte-ignore a11y_autofocus -->
+							<input
+								class="time outline-0 focus:underline"
+								type="text"
+								inputmode="numeric"
+								placeholder={'~' + Math.round(submitTime / 60)}
+								bind:value={timeMinsInput}
+								onblur={() => checkTimeInput()}
+								oninput={() => (timeMinsInput = timeMinsInput.replace(/\D/g, ''))}
+								maxlength="3"
+								autofocus
+							/>min.
 						{/if}
-						 / {formatTime(timer.state.goalTime)}</span
+						/ {formatTime(timer.state.goalTime)}</span
 					>
 				</div>
 				<div class="flex flex-row gap-2 sm:gap-4">

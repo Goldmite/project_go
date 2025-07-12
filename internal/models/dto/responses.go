@@ -37,3 +37,9 @@ type BookInfoResponse struct {
 	Language    string   `json:"language"`
 	Cover       string   `json:"cover"`
 }
+
+type BookProgressResponse struct {
+	PagesRead uint `json:"pages_read"`
+	TimeRead  uint `json:"time_read"`
+	FirstPage uint `json:"first_page"`
+}

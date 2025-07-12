@@ -30,10 +30,11 @@
 				{author}{i + 1 < book.authors.length ? ', ' : ''}
 			{/each}
 		</p>
-		<button 
-			class="ml-auto bg-current/15 outline-current/40 shadow-lg rounded-2xl min-w-28 h-12
-		hover:outline font-light active:font-normal"
-			onclick={() => goto(`${location.pathname}/reading`)}>
+		<button
+			class="ml-auto h-12 min-w-28 rounded-2xl bg-current/15 font-light shadow-lg
+		outline-current/40 hover:outline active:font-normal"
+			onclick={() => goto(`${location.pathname}/reading`)}
+		>
 			<span class="text-2xl text-current/80">Read</span>
 		</button>
 	</span>
@@ -49,7 +50,7 @@
 				{:else}
 					{book.description.slice(0, descriptionPreview)}...
 				{/if}
-				<button class="text-sm italic text-current/80" onclick={() => (readMore = !readMore)}>
+				<button class="text-sm text-current/80 italic" onclick={() => (readMore = !readMore)}>
 					{#if book.description.length > descriptionPreview}
 						{#if readMore}
 							See less
