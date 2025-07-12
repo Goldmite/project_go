@@ -8,6 +8,7 @@
 	import type { PageProps } from './$types';
 	import { bookOwners, groupMembers } from '$lib/stores/localMembers';
 	import BackButton from '../../../../components/navigation/BackButton.svelte';
+	import { goto } from '$app/navigation';
 
 	let { data }: PageProps = $props();
 	const book: Book = data.book;
@@ -29,6 +30,12 @@
 				{author}{i + 1 < book.authors.length ? ', ' : ''}
 			{/each}
 		</p>
+		<button 
+			class="ml-auto bg-current/15 outline-current/40 shadow-lg rounded-2xl min-w-28 h-12
+		hover:outline font-light active:font-normal"
+			onclick={() => goto(`${location.pathname}/reading`)}>
+			<span class="text-2xl text-current/80">Read</span>
+		</button>
 	</span>
 	<div class="flex-1">
 		<div class="float-left mr-3 min-w-42 sm:min-w-56">
@@ -42,7 +49,7 @@
 				{:else}
 					{book.description.slice(0, descriptionPreview)}...
 				{/if}
-				<button class="text-sm italic" onclick={() => (readMore = !readMore)}>
+				<button class="text-sm italic text-current/80" onclick={() => (readMore = !readMore)}>
 					{#if book.description.length > descriptionPreview}
 						{#if readMore}
 							See less
