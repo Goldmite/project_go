@@ -1,4 +1,4 @@
-module github.com/Goldmite/project_go
+module github.com/Goldmite/project_shelf
 
 go 1.24.3
 

@@ -17,7 +17,7 @@
 			<NavButton link="/signup" buttonText="Sign Up" color="logo-blue"></NavButton>
 			<a
 				class="h-6 w-6"
-				href="https://github.com/Goldmite/project_go"
+				href="https://github.com/Goldmite/project_shelf"
 				target="_blank"
 				aria-label="Visit Goldmite's Shelf project on GitHub"
 				><svg

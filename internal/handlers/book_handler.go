@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Goldmite/project_go/internal/models/dto"
-	"github.com/Goldmite/project_go/internal/services"
+	"github.com/Goldmite/project_shelf/internal/models/dto"
+	"github.com/Goldmite/project_shelf/internal/services"
 	"github.com/gin-gonic/gin"
 )
 

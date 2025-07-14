@@ -1,6 +1,6 @@
 package models
 
-import "github.com/Goldmite/project_go/internal/enums"
+import "github.com/Goldmite/project_shelf/internal/enums"
 
 type Book struct {
 	ISBN        string         `json:"isbn"`

@@ -3,9 +3,9 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/Goldmite/project_go/internal/models"
-	"github.com/Goldmite/project_go/internal/models/dto"
-	"github.com/Goldmite/project_go/internal/services"
+	"github.com/Goldmite/project_shelf/internal/models"
+	"github.com/Goldmite/project_shelf/internal/models/dto"
+	"github.com/Goldmite/project_shelf/internal/services"
 	"github.com/gin-gonic/gin"
 )
 

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/Goldmite/project_go/internal/database"
-	"github.com/Goldmite/project_go/internal/handlers"
-	"github.com/Goldmite/project_go/internal/services"
+	"github.com/Goldmite/project_shelf/internal/database"
+	"github.com/Goldmite/project_shelf/internal/handlers"
+	"github.com/Goldmite/project_shelf/internal/services"
 	"github.com/gin-gonic/gin"
 	_ "github.com/glebarez/go-sqlite"
 )

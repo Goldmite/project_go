@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/Goldmite/project_go/internal/models"
-	"github.com/Goldmite/project_go/internal/models/dto"
+	"github.com/Goldmite/project_shelf/internal/models"
+	"github.com/Goldmite/project_shelf/internal/models/dto"
 	"golang.org/x/crypto/bcrypt"
 )
 

@@ -8,8 +8,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Goldmite/project_go/internal/models"
-	"github.com/Goldmite/project_go/internal/models/dto"
+	"github.com/Goldmite/project_shelf/internal/models"
+	"github.com/Goldmite/project_shelf/internal/models/dto"
 )
 
 type IBookService interface {
