@@ -1,6 +1,6 @@
-# project_go
-Learn go with web app project.
+# project_shelf
+Learn go and svelte with web app project.
 
-# Demo (WIP)
+## Demo (WIP)
 
-[See demo](demo/demo_07-14.mkv)
+[See demo](https://youtu.be/_kJHK92HS0E)
