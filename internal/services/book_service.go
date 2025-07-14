@@ -115,7 +115,7 @@ func (bookService *BookService) GetAllUserBooks(userId string) ([]dto.BookRespon
 func (bookService *BookService) GetAllGroupBooks(groupId string) ([]dto.BookResponse, error) {
 	query := "SELECT GROUP_CONCAT(m.user_id), isbn, title, authors, cover_url FROM books b " +
 		"JOIN reading r ON b.isbn = r.book_id " +
-		"JOIN members m ON v.user_id = m.user_id " +
+		"JOIN members m ON r.user_id = m.user_id " +
 		"WHERE m.group_id = ? GROUP BY isbn"
 	rows, err := bookService.database.Query(query, groupId)
 	if err != nil {

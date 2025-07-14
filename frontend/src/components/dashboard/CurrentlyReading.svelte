@@ -8,7 +8,7 @@
 <div class="ml-4 sm:ml-10">
 	{@render children()}
 	<Grid>
-		<BookCard title="Test" authors="Placeholder" cover="" />
+		<BookCard ownedBy={[]} isbn="11111111111" title="Test" authors="Placeholder" cover="" />
 	</Grid>
 </div>
 
