@@ -25,9 +25,10 @@ export const actions = {
 		const data = await event.request.formData();
 		const firstPage = data.get('firstPage');
 		const startPage = data.get('start');
+		const endPage = data.get('end');
 		const pagesRead = data.get('pagesRead');
 		const timeRead = data.get('time');
-		if (firstPage == '' || startPage == '' || pagesRead == '' || timeRead == '') {
+		if (firstPage == '' || startPage == '' || endPage == '' || pagesRead == '' || timeRead == '') {
 			return fail(400);
 		}
 		const firstRealPage = Number(firstPage) === 1 ? Number(startPage) : undefined;
@@ -36,7 +37,8 @@ export const actions = {
 			isbn: isbn,
 			pages_read: Number(pagesRead),
 			time_read: Number(timeRead),
-			first_page: firstRealPage
+			first_page: firstRealPage,
+			current_page: Number(endPage)
 		});
 		const res = await fetch(`${PUBLIC_API_URL}/stats/progress/book`, {
 			method: 'PUT',
@@ -47,6 +49,6 @@ export const actions = {
 			return fail(res.status);
 		}
 
-		redirect(303, `/book/${isbn}`);
+		redirect(303, `/book/${isbn}/${event.params.from}/${event.params?.sharedId ?? ''}`);
 	}
 } satisfies Actions;

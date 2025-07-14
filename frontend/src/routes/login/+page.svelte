@@ -127,15 +127,3 @@
 		{/if}
 	</LoginForm>
 </div>
-
-<style>
-	progress {
-		width: 100%;
-		border-radius: var(--radius-xl);
-		accent-color: var(--bar-color);
-	}
-	progress::-webkit-progress-value,
-	progress::-moz-progress-bar {
-		background-color: var(--bar-color);
-	}
-</style>

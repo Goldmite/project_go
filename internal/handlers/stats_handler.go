@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/Goldmite/project_go/internal/models/dto"
@@ -36,6 +37,10 @@ func (statsHandler *StatsHandler) GetBookProgressHandler(c *gin.Context) {
 	isbn := c.Query("isbn")
 	response, err := statsHandler.statsService.GetBookProgress(userId, isbn)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(http.StatusNotFound, gin.H{"msg": "No progress or this user doesn't have this book"})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}

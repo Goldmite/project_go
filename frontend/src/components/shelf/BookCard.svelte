@@ -8,7 +8,11 @@
 </script>
 
 <div class="w-42 sm:w-56">
-	<a data-sveltekit-preload-data="tap" onclick={() => bookOwners.set(ownedBy)} href="/book/{isbn}/{fromPath}">
+	<a
+		data-sveltekit-preload-data="tap"
+		onclick={() => bookOwners.set(ownedBy)}
+		href="/book/{isbn}/{fromPath}"
+	>
 		<CoverWrapper {cover} {title} />
 	</a>
 	<p class="font-semibold">{title}</p>

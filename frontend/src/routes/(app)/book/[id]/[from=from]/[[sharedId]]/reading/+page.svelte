@@ -3,7 +3,7 @@
 	import type { Snapshot } from './$types';
 	import { Timer } from '$lib/timerState.svelte';
 	import { enhance } from '$app/forms';
-	import type { BookProgress } from '$lib/types/book';
+	import type { BookProgress } from '$lib/types/responses/book';
 	import PageSubheader from '../../../../../../../components/PageSubheader.svelte';
 
 	const timer = new Timer();
@@ -17,7 +17,7 @@
 	// Current progress data
 	let { data } = $props();
 	const progress: BookProgress = data.progress;
-	const actualStartPage = progress.first_page + progress.pages_read;
+	const actualStartPage = progress.current_page === 0 ? progress.first_page : progress.current_page;
 	const actualPace = progress.pages_read / (progress.time_read / 60);
 	let estimateEndPage = $state(actualStartPage);
 	// Time input in case of edit and validation
@@ -224,9 +224,9 @@
 						<div>
 							<label for="end">End page:</label>
 							<span class="float-right">
-								<input type="hidden" name="pagesRead" value={pagesRead} />
 								<input
 									class="outline-0 focus:underline"
+									name="end"
 									type="text"
 									inputmode="numeric"
 									placeholder={placeholderEnd}
@@ -236,6 +236,7 @@
 									maxlength="4"
 									required
 								/>
+								<input type="hidden" name="pagesRead" value={progress.pages_read + pagesRead} />
 								<span class="icon-[solar--pen-outline]"></span>
 							</span>
 						</div>
@@ -253,7 +254,7 @@
 							? 'bg-status-logo-done/20'
 							: 'bg-logo-red/20'}"
 				>
-					<input name="time" type="hidden" bind:value={submitTime} />
+					<input name="time" type="hidden" value={progress.time_read + submitTime} />
 					Time read:
 					<span class="font-semibold">
 						{#if !editTime}

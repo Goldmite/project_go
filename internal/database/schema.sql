@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS reading (
     pages_read INTEGER DEFAULT 0,
     time_read INTEGER DEFAULT 0,
     first_page INTEGER DEFAULT 1,
+    current_page INTEGER DEFAULT 0,
     session_created_at TEXT,
     session_updated_at TEXT,
     PRIMARY KEY (user_id, book_id),

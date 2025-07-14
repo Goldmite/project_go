@@ -39,7 +39,8 @@ type BookInfoResponse struct {
 }
 
 type BookProgressResponse struct {
-	PagesRead uint `json:"pages_read"`
-	TimeRead  uint `json:"time_read"`
-	FirstPage uint `json:"first_page"`
+	PagesRead   uint `json:"pages_read"`
+	TimeRead    uint `json:"time_read"`
+	FirstPage   uint `json:"first_page"`
+	CurrentPage uint `json:"current_page"`
 }

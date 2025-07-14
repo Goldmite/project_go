@@ -2,7 +2,7 @@ import { PUBLIC_API_URL } from '$env/static/public';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params, locals }) => {
 	if (params.sharedId) {
 		if (params.from === 'personal') {
 			throw error(404, 'Personal cannot have an ID.');
@@ -13,10 +13,19 @@ export const load: PageServerLoad = async ({ params }) => {
 		}
 	}
 
-	const res = await fetch(`${PUBLIC_API_URL}/books/${params.id}`);
-	if (res.status != 200) {
-		return error(res.status);
+	const detailsRes = await fetch(`${PUBLIC_API_URL}/books/${params.id}`);
+	if (detailsRes.status != 200) {
+		return error(detailsRes.status);
 	}
-	const book = await res.json();
-	return { book };
+	const userId = locals.user?.id;
+	let progress = undefined;
+	if (userId) {
+		const req = new URLSearchParams({ user_id: userId, isbn: params.id });
+		const progressRes = await fetch(`${PUBLIC_API_URL}/stats/progress/book?${req.toString()}`);
+		if (progressRes.status == 200) {
+			progress = await progressRes.json();
+		}
+	}
+	const book = await detailsRes.json();
+	return { book, progress };
 };
