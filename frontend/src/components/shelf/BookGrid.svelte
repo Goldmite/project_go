@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Book } from '$lib/types/book';
+	import type { Book } from '$lib/types/responses/book';
 	import BookCard from './BookCard.svelte';
 
 	let { books, children = () => {} }: { books: Book[]; children?: Function } = $props();

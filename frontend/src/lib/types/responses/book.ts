@@ -15,4 +15,5 @@ export interface BookProgress {
 	pages_read: number;
 	time_read: number;
 	first_page: number;
+	current_page: number;
 }

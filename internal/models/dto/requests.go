@@ -24,7 +24,8 @@ type DeclineRequest struct {
 
 type BookProgressRequest struct {
 	UserBookRequest
-	PagesRead uint  `json:"pages_read" binding:"required"`
-	TimeRead  uint  `json:"time_read" binding:"required"`
-	FirstPage *uint `json:"first_page"`
+	PagesRead   uint  `json:"pages_read" binding:"required"`
+	TimeRead    uint  `json:"time_read" binding:"required"`
+	FirstPage   *uint `json:"first_page"`
+	CurrentPage uint  `json:"current_page" binding:"required"`
 }
