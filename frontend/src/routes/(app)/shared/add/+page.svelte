@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { applyAction, enhance } from '$app/forms';
 	import { getInviteState, setInviteState } from '$lib/inviteState.svelte';
 	import { fly } from 'svelte/transition';
 	import ModalWrapper from '../../../../components/ModalWrapper.svelte';
@@ -7,6 +7,7 @@
 	import InviteForm from '../../../../components/shelf/shared/InviteForm.svelte';
 	import StepProgressBar from '../../../../components/StepProgressBar.svelte';
 	import type { PageProps } from './$types';
+	import { goto, invalidate } from '$app/navigation';
 
 	let { form }: PageProps = $props();
 	let step = $state(1);
@@ -27,7 +28,16 @@
 	>
 		<StepProgressBar currStep={step} />
 		<!-- Hidden, just to catch inputs-->
-		<form id="shared" method="POST" action="?/createShared" use:enhance>
+		<form id="shared" method="POST" action="?/createShared" use:enhance={() => {
+			return async ({ result }) => {
+				if (result.type === 'success') {
+					await invalidate('app:newgroup');
+					goto(`/shared/${result.data?.groupId}`);
+				}
+				await applyAction(result);
+			};
+		}}
+	>
 			<input type="hidden" name="name" value={name} />
 			{#each inviteState.invites as invite}
 				<input type="hidden" name="emails[]" value={invite.email} />
