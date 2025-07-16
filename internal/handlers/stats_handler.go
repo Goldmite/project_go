@@ -47,3 +47,18 @@ func (statsHandler *StatsHandler) GetBookProgressHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, response)
 }
+
+func (statsHandler *StatsHandler) GetUserStatsHandler(c *gin.Context) {
+	userId := c.Param("id")
+	response, err := statsHandler.statsService.GetUserStats(userId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(http.StatusNotFound, gin.H{"msg": "No reading stats"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, response)
+}

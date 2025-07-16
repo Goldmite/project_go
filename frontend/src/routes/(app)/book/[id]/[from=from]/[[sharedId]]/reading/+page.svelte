@@ -5,6 +5,7 @@
 	import { enhance } from '$app/forms';
 	import type { BookProgress } from '$lib/types/responses/book';
 	import PageSubheader from '../../../../../../../components/PageSubheader.svelte';
+	import { getPaceSpeed } from '$lib/helpers/pacePerformance';
 
 	const timer = new Timer();
 	let ts = $derived(timer.state);
@@ -34,17 +35,9 @@
 	}
 	// Reading pace calculations
 	let pagesRead = $derived(estimateEndPage - actualStartPage);
-	let pagesPerHour = $derived(
-		submitTime !== 0 ? Math.floor(pagesRead / (0.0002777777 * submitTime)) : 0
-	);
-	const readingPerformance = $derived.by(() => {
-		if (pagesPerHour < 50) {
-			return 'slow';
-		} else if (pagesPerHour <= 70) {
-			return 'average';
-		} else {
-			return 'fast';
-		}
+	let pagesPerHour = $derived(submitTime !== 0 ? Math.floor(pagesRead / (submitTime / 3600)) : 0);
+	let readingPerformance = $derived.by(() => {
+		return getPaceSpeed(pagesPerHour);
 	});
 	// Start / End page nr in case of edit and validation
 	let placeholderStart = actualStartPage.toString();

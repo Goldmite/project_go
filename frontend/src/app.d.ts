@@ -13,6 +13,7 @@ declare global {
 		interface PageState {
 			isLoginSelected: boolean;
 			invitations;
+			stats;
 			selected;
 			invite;
 			groupMembers: User[];

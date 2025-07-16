@@ -1,7 +1,8 @@
 <script>
 	import { applyAction, enhance } from '$app/forms';
+	import { invalidate } from '$app/navigation';
+	import { page } from '$app/state';
 	import { toRoman } from '$lib/helpers/romanNumerals';
-	import { redirect } from '@sveltejs/kit';
 	import ActionButton from './ActionButton.svelte';
 
 	let { inv, row } = $props();
@@ -10,7 +11,7 @@
 </script>
 
 <tr
-	class="group border border-current/40 {!isDecided
+	class="group outline-1 outline-current/20 {!isDecided
 		? ''
 		: action === 'accept'
 			? 'bg-status-logo-done/20'
@@ -32,8 +33,10 @@
 				return async ({ result }) => {
 					if (result.type === 'success') {
 						isDecided = true;
-						if (result.data?.isAccepted) action = 'accept';
-						else action = 'decline';
+						if (result.data?.isAccepted) {
+							action = 'accept';
+							invalidate('app:newgroup');
+						} else action = 'decline';
 					}
 					await applyAction(result);
 				};

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
+	import { MAX_INVITES } from '$lib/constants';
 	import { getInviteState } from '$lib/inviteState.svelte';
 	import ErrorMsg from '../../errors/ErrorMsg.svelte';
 	import InviteListBox from './InviteListBox.svelte';
 
-	const MAX_INVITES = 7;
 	let { invited = [], members = [], form, required } = $props();
 	const inviteState = getInviteState();
 

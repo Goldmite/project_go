@@ -10,7 +10,7 @@
 		: `text-logo-red inset-shadow-logo-red ${action === 'accept' && 'invisible'}`}"
 	type={'submit'}
 	disabled={action === 'decline'}
-	formaction={toAccept ? '?/accept' : '?/decline'}
+	formaction={toAccept ? 'dashboard/invitations?/accept' : 'dashboard/invitations?/decline'}
 >
 	{#if toAccept}
 		{#if action === 'accept'}

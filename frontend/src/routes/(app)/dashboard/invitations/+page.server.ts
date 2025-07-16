@@ -22,7 +22,7 @@ export const actions = {
 		const toRedirect: boolean = formData.get('redirect') === 'true';
 		if (!currUser || !groupId) return fail(400);
 		if (toRedirect) {
-			redirect(303, `/shared/redirect/${groupId}`);
+			redirect(303, `/shared/${groupId}`);
 		}
 
 		const data = JSON.stringify({
