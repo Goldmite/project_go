@@ -2,6 +2,7 @@ package services
 
 import (
 	"database/sql"
+	"time"
 
 	"github.com/Goldmite/project_shelf/internal/models/dto"
 )
@@ -45,10 +46,16 @@ func (statsService *StatsService) UpdateBookProgress(req dto.BookProgressRequest
 	if err != nil {
 		return err
 	}
+	// Save reading stats:
 	err = statsService.UpdateUserTotalStats(req.UserId, req.PagesRead, req.TimeRead)
 	if err != nil {
 		return err
 	}
+	err = statsService.AddSessionEntry(req.UserId, req.TimeRead)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -78,6 +85,31 @@ func (statsService *StatsService) GetUserStats(userId string) (*dto.TotalProgres
 	return &stats, nil
 }
 
+func (statsService *StatsService) GetUserSessions(userId, fromDate string) ([]dto.ReadingSession, error) {
+	query := "SELECT date, time_read FROM sessions WHERE user_id = ? AND date >= ?"
+	rows, err := statsService.database.Query(query, userId, fromDate)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var entries []dto.ReadingSession
+	for rows.Next() {
+		var e dto.ReadingSession
+		err := rows.Scan(&e.Date, &e.TimeRead)
+		if err != nil {
+			return nil, err
+		}
+		entries = append(entries, e)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return entries, nil
+}
+
 func (statsService *StatsService) UpdateUserTotalStats(userId string, pages, time uint) error {
 	query := "UPDATE stats SET total_pages = total_pages + ?, total_time = total_time + ?, updated_at = CURRENT_TIMESTAMP WHERE user_id = ?"
 	result, err := statsService.database.Exec(query, pages, time, userId)
@@ -93,6 +125,16 @@ func (statsService *StatsService) UpdateUserTotalStats(userId string, pages, tim
 		if err != nil {
 			return err
 		}
+	}
+	return nil
+}
+
+func (statsService *StatsService) AddSessionEntry(userId string, timeRead uint) error {
+	query := "INSERT INTO sessions (user_id, date, time_read) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE time_read = time_read + VALUES(time_read)"
+	dateTime := time.Now().Format("2006-01-02")
+	_, err := statsService.database.Exec(query, userId, dateTime, timeRead)
+	if err != nil {
+		return err
 	}
 	return nil
 }

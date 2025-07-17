@@ -69,3 +69,11 @@ CREATE TABLE IF NOT EXISTS stats (
     updated_at TEXT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS sessions {
+    user_id TEXT NOT NULL,
+    date TEXT NOT NULL,
+    time_read INTEGER DEFAULT 0,
+    PRIMARY KEY (user_id, date),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+};

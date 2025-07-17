@@ -49,3 +49,8 @@ type TotalProgressResponse struct {
 	TotalPagesRead uint `json:"total_pages"`
 	TotalTimeRead  uint `json:"total_time"`
 }
+
+type ReadingSession struct {
+	Date     string `json:"date"`
+	TimeRead uint   `json:"time_read"`
+}

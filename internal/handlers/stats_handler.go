@@ -3,6 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"net/http"
+	"time"
 
 	"github.com/Goldmite/project_shelf/internal/models/dto"
 	"github.com/Goldmite/project_shelf/internal/services"
@@ -56,6 +57,23 @@ func (statsHandler *StatsHandler) GetUserStatsHandler(c *gin.Context) {
 			c.JSON(http.StatusNotFound, gin.H{"msg": "No reading stats"})
 			return
 		}
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, response)
+}
+
+func (statsHandler *StatsHandler) GetUserSessionsHandler(c *gin.Context) {
+	userId := c.Query("user_id")
+	fromDate := c.Query("from")
+	if _, err := time.Parse("2006-01-02", fromDate); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Incorrect date format, use YYYY-MM-DD"})
+		return
+	}
+
+	response, err := statsHandler.statsService.GetUserSessions(userId, fromDate)
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
