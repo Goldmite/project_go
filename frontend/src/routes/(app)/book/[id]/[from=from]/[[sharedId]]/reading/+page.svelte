@@ -229,7 +229,7 @@
 									maxlength="4"
 									required
 								/>
-								<input type="hidden" name="pagesRead" value={progress.pages_read + pagesRead} />
+								<input type="hidden" name="pagesRead" value={pagesRead} />
 								<span class="icon-[solar--pen-outline]"></span>
 							</span>
 						</div>
@@ -247,7 +247,7 @@
 							? 'bg-status-logo-done/20'
 							: 'bg-logo-red/20'}"
 				>
-					<input name="time" type="hidden" value={progress.time_read + submitTime} />
+					<input name="time" type="hidden" value={submitTime} />
 					Time read:
 					<span class="font-semibold">
 						{#if !editTime}
@@ -299,7 +299,8 @@
 						Cancel
 					</button>
 					<button
-						class="active:inset-shadow-md bg-status-logo-done mx-4 w-full rounded-2xl p-2 text-lg hover:brightness-95 active:text-base"
+						class="active:inset-shadow-md bg-status-logo-done mx-4 w-full rounded-2xl p-2 text-lg hover:brightness-95 active:text-base
+						{(submitTime === 0 || pagesRead === 0) && 'invisible'}"
 						type="submit"
 					>
 						Confirm

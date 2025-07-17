@@ -20,39 +20,34 @@ func (statsService *StatsService) UpdateBookProgress(req dto.BookProgressRequest
 	if err != nil {
 		return err
 	}
-	defer func() {
-		if p := recover(); p != nil {
-			tx.Rollback()
-			panic(p)
-		} else if err != nil {
-			tx.Rollback()
-		} else {
-			err = tx.Commit()
-		}
-	}()
+	defer tx.Rollback()
+
 	var (
 		query string
 		args  []any
 	)
 
 	if req.FirstPage != nil {
-		query = "UPDATE reading SET pages_read = ?, time_read = ?, first_page = ?, current_page = ?, session_created_at = CURRENT_TIMESTAMP WHERE user_id = ? AND book_id = ?"
+		query = "UPDATE reading SET pages_read = pages_read + ?, time_read = time_read + ?, first_page = ?, current_page = ?, session_created_at = CURRENT_TIMESTAMP WHERE user_id = ? AND book_id = ?"
 		args = []any{req.PagesRead, req.TimeRead, *req.FirstPage, req.CurrentPage, req.UserId, req.Isbn}
 	} else {
-		query = "UPDATE reading SET pages_read = ?, time_read = ?, current_page = ?, session_updated_at = CURRENT_TIMESTAMP WHERE user_id = ? AND book_id = ?"
+		query = "UPDATE reading SET pages_read = pages_read + ?, time_read = time_read + ?, current_page = ?, session_updated_at = CURRENT_TIMESTAMP WHERE user_id = ? AND book_id = ?"
 		args = []any{req.PagesRead, req.TimeRead, req.CurrentPage, req.UserId, req.Isbn}
 	}
-	_, err = statsService.database.Exec(query, args...)
+	_, err = tx.Exec(query, args...)
 	if err != nil {
 		return err
 	}
 	// Save reading stats:
-	err = statsService.UpdateUserTotalStats(req.UserId, req.PagesRead, req.TimeRead)
+	err = statsService.UpdateUserTotalStats(tx, req.UserId, req.PagesRead, req.TimeRead)
 	if err != nil {
 		return err
 	}
-	err = statsService.AddSessionEntry(req.UserId, req.TimeRead)
+	err = statsService.AddSessionEntry(tx, req.UserId, req.TimeRead)
 	if err != nil {
+		return err
+	}
+	if err = tx.Commit(); err != nil {
 		return err
 	}
 
@@ -110,9 +105,9 @@ func (statsService *StatsService) GetUserSessions(userId, fromDate string) ([]dt
 	return entries, nil
 }
 
-func (statsService *StatsService) UpdateUserTotalStats(userId string, pages, time uint) error {
+func (statsService *StatsService) UpdateUserTotalStats(tx *sql.Tx, userId string, pages, time uint) error {
 	query := "UPDATE stats SET total_pages = total_pages + ?, total_time = total_time + ?, updated_at = CURRENT_TIMESTAMP WHERE user_id = ?"
-	result, err := statsService.database.Exec(query, pages, time, userId)
+	result, err := tx.Exec(query, pages, time, userId)
 	if err != nil {
 		return err
 	}
@@ -121,7 +116,7 @@ func (statsService *StatsService) UpdateUserTotalStats(userId string, pages, tim
 			return err
 		}
 		query = "INSERT INTO stats (user_id, total_pages, total_time, created_at, updated_at) VALUES(?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"
-		_, err := statsService.database.Exec(query, userId, pages, time)
+		_, err := tx.Exec(query, userId, pages, time)
 		if err != nil {
 			return err
 		}
@@ -129,12 +124,9 @@ func (statsService *StatsService) UpdateUserTotalStats(userId string, pages, tim
 	return nil
 }
 
-func (statsService *StatsService) AddSessionEntry(userId string, timeRead uint) error {
-	query := "INSERT INTO sessions (user_id, date, time_read) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE time_read = time_read + VALUES(time_read)"
+func (statsService *StatsService) AddSessionEntry(tx *sql.Tx, userId string, timeRead uint) error {
+	query := "INSERT INTO sessions (user_id, date, time_read) VALUES(?, ?, ?) ON CONFLICT(user_id, date) DO UPDATE SET time_read = time_read + excluded.time_read"
 	dateTime := time.Now().Format("2006-01-02")
-	_, err := statsService.database.Exec(query, userId, dateTime, timeRead)
-	if err != nil {
-		return err
-	}
-	return nil
+	_, err := tx.Exec(query, userId, dateTime, timeRead)
+	return err
 }
