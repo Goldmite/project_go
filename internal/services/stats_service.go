@@ -81,7 +81,7 @@ func (statsService *StatsService) GetUserStats(userId string) (*dto.TotalProgres
 }
 
 func (statsService *StatsService) GetUserSessions(userId, fromDate string) ([]dto.ReadingSession, error) {
-	query := "SELECT date, time_read FROM sessions WHERE user_id = ? AND date >= ?"
+	query := "SELECT date, time_read FROM sessions WHERE user_id = ? AND date >= ? ORDER BY date ASC"
 	rows, err := statsService.database.Query(query, userId, fromDate)
 	if err != nil {
 		return nil, err

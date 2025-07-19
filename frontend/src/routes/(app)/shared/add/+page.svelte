@@ -28,16 +28,20 @@
 	>
 		<StepProgressBar currStep={step} />
 		<!-- Hidden, just to catch inputs-->
-		<form id="shared" method="POST" action="?/createShared" use:enhance={() => {
-			return async ({ result }) => {
-				if (result.type === 'success') {
-					await invalidate('app:newgroup');
-					goto(`/shared/${result.data?.groupId}`);
-				}
-				await applyAction(result);
-			};
-		}}
-	>
+		<form
+			id="shared"
+			method="POST"
+			action="?/createShared"
+			use:enhance={() => {
+				return async ({ result }) => {
+					if (result.type === 'success') {
+						await invalidate('app:newgroup');
+						goto(`/shared/${result.data?.groupId}`);
+					}
+					await applyAction(result);
+				};
+			}}
+		>
 			<input type="hidden" name="name" value={name} />
 			{#each inviteState.invites as invite}
 				<input type="hidden" name="emails[]" value={invite.email} />

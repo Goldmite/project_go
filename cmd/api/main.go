@@ -51,6 +51,7 @@ func main() {
 	api.PUT("/stats/progress/book", statsHandler.UpdateBookProgressHandler)
 	api.GET("/stats/progress/book", statsHandler.GetBookProgressHandler)
 	api.GET("/stats/user/:id", statsHandler.GetUserStatsHandler)
+	api.GET("/stats/activity", statsHandler.GetUserSessionsHandler)
 
 	router.Run(":3000")
 }

@@ -51,7 +51,7 @@
 	>
 {/snippet}
 
-<div class="mt-4 w-[336px]">
+<div class="w-[336px]">
 	<nav class="flex justify-around p-1">
 		{@render tabEl('stats')}
 		{@render tabEl('invitations')}
