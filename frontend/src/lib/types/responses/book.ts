@@ -17,3 +17,12 @@ export interface BookProgress {
 	first_page: number;
 	current_page: number;
 }
+
+export interface RecentlyRead {
+	isbn: string;
+	title: string;
+	authors: string[];
+	cover: string;
+	start_date: string;
+	last_read_date: string;
+}

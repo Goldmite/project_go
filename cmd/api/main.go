@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/Goldmite/project_go/internal/database"
-	"github.com/Goldmite/project_go/internal/handlers"
-	"github.com/Goldmite/project_go/internal/services"
+	"github.com/Goldmite/project_shelf/internal/database"
+	"github.com/Goldmite/project_shelf/internal/handlers"
+	"github.com/Goldmite/project_shelf/internal/services"
 	"github.com/gin-gonic/gin"
 	_ "github.com/glebarez/go-sqlite"
 )
@@ -40,6 +40,7 @@ func main() {
 	api.GET("/books/:isbn", bookHandler.GetBookByIsbnHandler)
 	api.GET("/books/user/:id", bookHandler.GetAllUserBooksHandler)
 	api.GET("/books/groups/:id", bookHandler.GetAllGroupBooksHandler)
+	api.GET("/books/recent/user/:id", bookHandler.GetRecentlyReadBookHandler)
 
 	api.POST("/groups", groupHandler.CreateGroupHandler)
 	api.GET("/groups/:id", groupHandler.GetAllUserGroupsHandler)
@@ -50,6 +51,8 @@ func main() {
 
 	api.PUT("/stats/progress/book", statsHandler.UpdateBookProgressHandler)
 	api.GET("/stats/progress/book", statsHandler.GetBookProgressHandler)
+	api.GET("/stats/user/:id", statsHandler.GetUserStatsHandler)
+	api.GET("/stats/activity", statsHandler.GetUserSessionsHandler)
 
 	router.Run(":3000")
 }

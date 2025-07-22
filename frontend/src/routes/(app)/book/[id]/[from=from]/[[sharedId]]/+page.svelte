@@ -11,6 +11,7 @@
 	import { page } from '$app/state';
 	import { user } from '$lib/stores/user';
 	import { formatMinToHoursOrMin } from '$lib/helpers/formatMinTime';
+	import { MINUTES_TO_SEE_STATS } from '$lib/constants';
 
 	let { data }: PageProps = $props();
 	const book: Book = data.book;
@@ -44,8 +45,7 @@
 		</p>
 		{#if book.owned_by.includes($user?.id ?? 'NO_USER')}
 			<div class="ml-auto flex flex-row gap-2 sm:gap-6">
-				<!-- Show progress after at least 10 mins of reading -->
-				{#if progress && progress.time_read >= 10 * 60}
+				{#if progress && progress.time_read >= MINUTES_TO_SEE_STATS * 60}
 					<div class="min-w-50 text-center">
 						<progress
 							value={progress.current_page}
@@ -65,8 +65,12 @@
 								{/if}
 								{formatMinToHoursOrMin(progress.time_read / 60)} | {progress.pages_read}p.
 							{/if}
-							| ~{Math.floor(progress.pages_read / (0.0002777777 * progress.time_read))}pph
+							| ~{Math.floor(progress.pages_read / (progress.time_read / 3600))}pph
 						</span>
+					</div>
+				{:else}
+					<div class="p-1 text-sm text-nowrap text-current/50 italic">
+						(Read {MINUTES_TO_SEE_STATS} min.<br /> to see stats)
 					</div>
 				{/if}
 				<button

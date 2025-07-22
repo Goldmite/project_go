@@ -1,12 +1,13 @@
 package handlers
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"strings"
 
-	"github.com/Goldmite/project_go/internal/models/dto"
-	"github.com/Goldmite/project_go/internal/services"
+	"github.com/Goldmite/project_shelf/internal/models/dto"
+	"github.com/Goldmite/project_shelf/internal/services"
 	"github.com/gin-gonic/gin"
 )
 
@@ -74,4 +75,19 @@ func (bookHandler *BookHandler) GetAllGroupBooksHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, groupBooks)
+}
+
+func (bookHandler *BookHandler) GetRecentlyReadBookHandler(c *gin.Context) {
+	userId := c.Param("id")
+	recentBook, err := bookHandler.bookService.GetRecentlyReadBook(userId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(http.StatusNotFound, gin.H{"msg": "No recently read book in the past month"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, recentBook)
 }

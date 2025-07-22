@@ -3,8 +3,8 @@ package models
 import (
 	"time"
 
-	"github.com/Goldmite/project_go/internal/enums"
-	"github.com/Goldmite/project_go/internal/models/dto"
+	"github.com/Goldmite/project_shelf/internal/enums"
+	"github.com/Goldmite/project_shelf/internal/models/dto"
 )
 
 type Invitation struct {

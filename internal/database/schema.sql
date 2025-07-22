@@ -60,3 +60,20 @@ CREATE TABLE IF NOT EXISTS invitations (
     FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE,
     FOREIGN KEY (invited_by) REFERENCES users(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS stats (
+    user_id TEXT PRIMARY KEY,
+    total_pages INTEGER DEFAULT 0,
+    total_time INTEGER DEFAULT 0,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS sessions (
+    user_id TEXT NOT NULL,
+    date TEXT NOT NULL,
+    time_read INTEGER DEFAULT 0,
+    PRIMARY KEY (user_id, date),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

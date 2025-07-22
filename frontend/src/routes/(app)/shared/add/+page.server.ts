@@ -1,6 +1,6 @@
 import { PUBLIC_API_URL } from '$env/static/public';
 import { checkUser } from '$lib/server/inviteValidity';
-import { fail, redirect, type Actions } from '@sveltejs/kit';
+import { fail, type Actions } from '@sveltejs/kit';
 
 export const actions = {
 	createShared: async (event) => {
@@ -36,8 +36,7 @@ export const actions = {
 		if (inviteRes.status != 200) {
 			return fail(inviteRes.status);
 		}
-		// redirect to proxy to give time to get new group info
-		redirect(303, `/shared/redirect/${groupId}`);
+		return { success: true, groupId };
 	},
 	checkUser: async (event) => {
 		const email = (await event.request.formData()).get('email') ?? '';

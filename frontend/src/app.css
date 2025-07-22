@@ -12,6 +12,12 @@
 	--color-status-logo-progress: #ffd27e; /* means in progress, medium */
 	--color-status-logo-done: #87b6a7; /* means accept, success, good, done */
 	--inset-shadow-md: inset -1px 1px 8px rgba(0, 0, 0, 0.25);
+	/* Gradient green colors for activity */
+	--color-activity-lighter: #87b6a7;
+	--color-activity-light: #749c90;
+	--color-activity-mid: #618378;
+	--color-activity-dark: #4e6a61;
+	--color-activity-darker: #3b5049;
 }
 
 @layer {

@@ -2,8 +2,9 @@ package services
 
 import (
 	"database/sql"
+	"time"
 
-	"github.com/Goldmite/project_go/internal/models/dto"
+	"github.com/Goldmite/project_shelf/internal/models/dto"
 )
 
 type StatsService struct {
@@ -15,22 +16,41 @@ func NewStatsService(db *sql.DB) *StatsService {
 }
 
 func (statsService *StatsService) UpdateBookProgress(req dto.BookProgressRequest) error {
+	tx, err := statsService.database.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
 	var (
 		query string
 		args  []any
 	)
 
 	if req.FirstPage != nil {
-		query = "UPDATE reading SET pages_read = ?, time_read = ?, first_page = ?, current_page = ?, session_created_at = CURRENT_TIMESTAMP WHERE user_id = ? AND book_id = ?"
+		query = "UPDATE reading SET pages_read = pages_read + ?, time_read = time_read + ?, first_page = ?, current_page = ?, session_created_at = CURRENT_TIMESTAMP, session_updated_at = CURRENT_TIMESTAMP WHERE user_id = ? AND book_id = ?"
 		args = []any{req.PagesRead, req.TimeRead, *req.FirstPage, req.CurrentPage, req.UserId, req.Isbn}
 	} else {
-		query = "UPDATE reading SET pages_read = ?, time_read = ?, current_page = ?, session_updated_at = CURRENT_TIMESTAMP WHERE user_id = ? AND book_id = ?"
+		query = "UPDATE reading SET pages_read = pages_read + ?, time_read = time_read + ?, current_page = ?, session_updated_at = CURRENT_TIMESTAMP WHERE user_id = ? AND book_id = ?"
 		args = []any{req.PagesRead, req.TimeRead, req.CurrentPage, req.UserId, req.Isbn}
 	}
-	_, err := statsService.database.Exec(query, args...)
+	_, err = tx.Exec(query, args...)
 	if err != nil {
 		return err
 	}
+	// Save reading stats:
+	err = statsService.UpdateUserTotalStats(tx, req.UserId, req.PagesRead, req.TimeRead)
+	if err != nil {
+		return err
+	}
+	err = statsService.AddSessionEntry(tx, req.UserId, req.TimeRead)
+	if err != nil {
+		return err
+	}
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -45,4 +65,68 @@ func (statsService *StatsService) GetBookProgress(userId, isbn string) (*dto.Boo
 	}
 
 	return &progress, nil
+}
+
+func (statsService *StatsService) GetUserStats(userId string) (*dto.TotalProgressResponse, error) {
+	query := "SELECT total_pages, total_time FROM stats WHERE user_id = ?"
+	row := statsService.database.QueryRow(query, userId)
+
+	var stats dto.TotalProgressResponse
+	err := row.Scan(&stats.TotalPagesRead, &stats.TotalTimeRead)
+	if err != nil {
+		return nil, err
+	}
+
+	return &stats, nil
+}
+
+func (statsService *StatsService) GetUserSessions(userId, fromDate string) ([]dto.ReadingSession, error) {
+	query := "SELECT date, time_read FROM sessions WHERE user_id = ? AND date >= ? ORDER BY date ASC"
+	rows, err := statsService.database.Query(query, userId, fromDate)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var entries []dto.ReadingSession
+	for rows.Next() {
+		var e dto.ReadingSession
+		err := rows.Scan(&e.Date, &e.TimeRead)
+		if err != nil {
+			return nil, err
+		}
+		entries = append(entries, e)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return entries, nil
+}
+
+func (statsService *StatsService) UpdateUserTotalStats(tx *sql.Tx, userId string, pages, time uint) error {
+	query := "UPDATE stats SET total_pages = total_pages + ?, total_time = total_time + ?, updated_at = CURRENT_TIMESTAMP WHERE user_id = ?"
+	result, err := tx.Exec(query, pages, time, userId)
+	if err != nil {
+		return err
+	}
+	if row, err := result.RowsAffected(); row == 0 {
+		if err != nil {
+			return err
+		}
+		query = "INSERT INTO stats (user_id, total_pages, total_time, created_at, updated_at) VALUES(?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"
+		_, err := tx.Exec(query, userId, pages, time)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (statsService *StatsService) AddSessionEntry(tx *sql.Tx, userId string, timeRead uint) error {
+	query := "INSERT INTO sessions (user_id, date, time_read) VALUES(?, ?, ?) ON CONFLICT(user_id, date) DO UPDATE SET time_read = time_read + excluded.time_read"
+	dateTime := time.Now().Format("2006-01-02")
+	_, err := tx.Exec(query, userId, dateTime, timeRead)
+	return err
 }

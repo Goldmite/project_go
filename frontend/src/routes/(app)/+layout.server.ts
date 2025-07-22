@@ -3,12 +3,13 @@ import type { LayoutServerLoad } from './$types';
 import { groups } from '$lib/stores/group';
 import { PUBLIC_API_URL } from '$env/static/public';
 
-export const load: LayoutServerLoad = async ({ locals }) => {
+export const load: LayoutServerLoad = async ({ locals, depends }) => {
 	const loggedInUser = locals.user;
 	if (!loggedInUser) {
 		redirect(307, '/login');
 	}
 
+	depends('app:newgroup');
 	const res = await fetch(`${PUBLIC_API_URL}/groups/${loggedInUser?.id}`);
 	if (res.status != 200) {
 		return fail(res.status);

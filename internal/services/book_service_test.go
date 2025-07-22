@@ -6,9 +6,9 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/Goldmite/project_go/internal/enums"
-	"github.com/Goldmite/project_go/internal/models"
-	"github.com/Goldmite/project_go/internal/services"
+	"github.com/Goldmite/project_shelf/internal/enums"
+	"github.com/Goldmite/project_shelf/internal/models"
+	"github.com/Goldmite/project_shelf/internal/services"
 	"github.com/stretchr/testify/assert"
 )
 

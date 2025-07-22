@@ -27,7 +27,7 @@
 				}
 			: null}
 		class={[
-			'bg-light dark:bg-dark hover:border-logo-red hover:shadow-logo-red min-h-12 w-full max-w-36 min-w-28 truncate border p-3 font-sans font-bold shadow-lg sm:max-w-full',
+			'bg-light dark:bg-dark hover:border-logo-red hover:shadow-logo-red min-h-12 w-full max-w-36 min-w-28 truncate border border-current/20 p-3 font-sans font-bold shadow-lg sm:max-w-full',
 			{ 'bg-logo-red dark:bg-logo-red border-logo-red text-dark': currentPage.includes(pageUrl) }
 		]}
 	>
@@ -42,7 +42,7 @@
 		<div class="group relative top-full min-w-max">
 			{@render AppNavButton('Shared', '/shared')}
 			<div
-				class="absolute z-10 hidden h-fit max-h-60.5 max-w-28 min-w-28 flex-col overflow-y-scroll border-y group-focus-within:flex group-hover:flex sm:max-h-84.5 sm:max-w-46"
+				class="absolute z-10 hidden h-fit max-h-60.5 max-w-28 min-w-28 flex-col overflow-y-scroll border-y border-current/20 group-focus-within:flex group-hover:flex sm:max-h-84.5 sm:max-w-46"
 			>
 				{@render AppNavButton('+', '/shared/add')}
 				{#each data.shared as shelf (shelf.id)}
