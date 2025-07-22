@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"strings"
@@ -74,4 +75,19 @@ func (bookHandler *BookHandler) GetAllGroupBooksHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, groupBooks)
+}
+
+func (bookHandler *BookHandler) GetRecentlyReadBookHandler(c *gin.Context) {
+	userId := c.Param("id")
+	recentBook, err := bookHandler.bookService.GetRecentlyReadBook(userId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(http.StatusNotFound, gin.H{"msg": "No recently read book in the past month"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, recentBook)
 }

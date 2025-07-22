@@ -9,7 +9,7 @@
 	async function preloadTab(e: any) {
 		e.preventDefault();
 		const { href } = e.currentTarget;
-		selectedTab = href.split('/').at(-1);
+		//selectedTab = href.split('/').at(-1);
 		getResult(href);
 	}
 	async function getResult(href: string) {
@@ -29,6 +29,12 @@
 			});
 		}
 	}
+	$effect(() => {
+		if (page.state.stats) selectedTab = 'stats';
+		else if (page.state.invitations) selectedTab = 'invitations';
+		else selectedTab = '';
+	});
+
 	let invState = $state(undefined);
 	$effect(() => {
 		if (selectedTab === 'invitations') {
@@ -44,7 +50,7 @@
 
 {#snippet tabEl(to: string)}
 	<a
-		class="px-4 capitalize hover:underline {selectedTab === to && 'font-semibold underline'}"
+		class="px-4 capitalize hover:underline {selectedTab === to && 'font-bold underline'}"
 		href="/dashboard/{to}"
 		data-sveltekit-preload-data="tap"
 		onclick={(e) => preloadTab(e)}>{to}</a

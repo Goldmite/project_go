@@ -73,8 +73,8 @@
 		position: relative;
 		border-color: transparent;
 		transition:
-			border-color 0.5s ease 0.3s,
-			border-width 0.5s ease 0.3s;
+			border-color 0.5s ease 0.2s,
+			border-width 0.5s ease 0.2s;
 	}
 	.cell::after {
 		content: attr(data-tooltip);
@@ -96,9 +96,7 @@
 		color: var(--color-dark);
 	}
 
-	.cell:hover::after {
-		display: block;
-	}
+	.cell:hover::after,
 	.cell:focus::after {
 		display: block;
 	}

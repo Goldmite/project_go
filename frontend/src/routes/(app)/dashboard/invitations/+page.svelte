@@ -6,7 +6,7 @@
 	let { data }: PageProps = $props();
 </script>
 
-<div class="-mr-0.5 h-fit max-h-50 min-h-10 overflow-y-scroll" transition:slide>
+<div class="h-fit max-h-50 min-h-10 overflow-y-scroll" transition:slide>
 	<table class="h-full w-full table-auto font-sans">
 		<tbody>
 			{#each data.invitations as inv, i}

@@ -38,6 +38,12 @@ type BookInfoResponse struct {
 	Cover       string   `json:"cover"`
 }
 
+type RecentlyReadResponse struct {
+	BookResponse
+	StartDate    string `json:"start_date"`
+	LastReadDate string `json:"last_read_date"`
+}
+
 type BookProgressResponse struct {
 	PagesRead   uint `json:"pages_read"`
 	TimeRead    uint `json:"time_read"`

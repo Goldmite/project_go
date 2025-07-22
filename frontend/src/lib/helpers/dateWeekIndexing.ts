@@ -29,14 +29,14 @@ export function mapToWeekIndexing(sessions: ReadingSession[]): Heatmap {
 			}
 			if (!data[w]) data[w] = {};
 			data[w][d] = {
-				date: date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+				date: formatDateReadably(date),
 				time: value,
 				level: getActivityLevel(value)
 			};
 		}
 	}
 }
-function normalizeDate(d: Date) {
+export function normalizeDate(d: Date) {
 	return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
 }
 
@@ -47,4 +47,8 @@ function getActivityLevel(sec: number) {
 	else if (sec <= 90 * 60) return 3;
 	else if (sec <= 120 * 60) return 4;
 	else return 5;
+}
+const readableFormat = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' });
+export function formatDateReadably(date: Date) {
+	return readableFormat.format(date);
 }

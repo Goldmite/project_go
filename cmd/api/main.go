@@ -40,6 +40,7 @@ func main() {
 	api.GET("/books/:isbn", bookHandler.GetBookByIsbnHandler)
 	api.GET("/books/user/:id", bookHandler.GetAllUserBooksHandler)
 	api.GET("/books/groups/:id", bookHandler.GetAllGroupBooksHandler)
+	api.GET("/books/recent/user/:id", bookHandler.GetRecentlyReadBookHandler)
 
 	api.POST("/groups", groupHandler.CreateGroupHandler)
 	api.GET("/groups/:id", groupHandler.GetAllUserGroupsHandler)

@@ -73,6 +73,30 @@ func (bookService *BookService) GetBookByIsbn(isbn string) (*dto.BookInfoRespons
 	return &book, nil
 }
 
+func (bookService *BookService) GetRecentlyReadBook(userId string) (*dto.RecentlyReadResponse, error) {
+	query := "SELECT isbn, title, authors, cover_url, session_created_at, session_updated_at FROM books " +
+		"JOIN reading ON isbn = book_id " +
+		"WHERE user_id = ? " +
+		"ORDER BY session_updated_at DESC " +
+		"LIMIT 1"
+	row := bookService.database.QueryRow(query, userId)
+
+	var (
+		recent      dto.RecentlyReadResponse
+		authorsJson string
+	)
+	err := row.Scan(&recent.ISBN, &recent.Title, &authorsJson, &recent.Cover, &recent.StartDate, &recent.LastReadDate)
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal([]byte(authorsJson), &recent.Authors)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse authors JSON: %w", err)
+	}
+
+	return &recent, nil
+}
+
 func (bookService *BookService) AddNewBookForUser(userId, isbn string) error {
 	// Book does not exist -> add it
 	if _, err := bookService.GetBookByIsbn(isbn); err != nil {
